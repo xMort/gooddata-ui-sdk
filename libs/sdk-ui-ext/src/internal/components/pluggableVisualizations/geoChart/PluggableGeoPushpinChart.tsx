@@ -226,6 +226,7 @@ export class PluggableGeoPushpinChart extends PluggableBaseChart {
         const resultingHeight = this.environment === DASHBOARDS_ENVIRONMENT ? height : undefined;
         const { drillableItems } = custom;
         const supportedControls: IVisualizationProperties = this.visualizationProperties.controls || {};
+        console.log("supportedControls", supportedControls);
         const fullConfig = this.buildVisualizationConfig(options, supportedControls);
 
         // we need to shallow copy the buckets so that we can add more without mutating the original array
@@ -383,18 +384,27 @@ export class PluggableGeoPushpinChart extends PluggableBaseChart {
             return referencePoint;
         }
         const referencePointConfigured = cloneDeep(referencePoint);
-        const { dfRef } = locationItem;
+        const { /*displayForms,*/ dfRef } = locationItem;
         const visualizationProperties = this.visualizationProperties || {};
         const { controls = {} } = visualizationProperties;
-        const hasSizeMesure = getItemsCount(buckets, BucketNames.SIZE) > 0;
-        const hasColorMesure = getItemsCount(buckets, BucketNames.COLOR) > 0;
+        const hasSizeMeasure = getItemsCount(buckets, BucketNames.SIZE) > 0;
+        const hasColorMeasure = getItemsCount(buckets, BucketNames.COLOR) > 0;
         const hasLocationAttribute = getItemsCount(buckets, BucketNames.LOCATION) > 0;
         const hasSegmentAttribute = getItemsCount(buckets, BucketNames.SEGMENT) > 0;
         const groupNearbyPoints =
-            hasLocationAttribute && !hasColorMesure && !hasSizeMesure && !hasSegmentAttribute;
+            hasLocationAttribute && !hasColorMeasure && !hasSizeMeasure && !hasSegmentAttribute;
 
-        // For tooltip text, displayFrom uri must be default displayFrom
-        const tooltipText = isUriRef(dfRef) ? dfRef.uri : dfRef.identifier;
+        // For tooltip text, we must use default display form. For some reason, locationItem does not have
+        // displayForms list set at first and only usable prop is dfRef (set to default display form now).
+        // With later props, the dfRef is set to location display form (which causes chart tooltips to display
+        // coordinates instead of text label) but we have displayForms list now with all attribute display
+        // forms. The first text display form (with undefined "type") is considered as our default one.
+        console.log("locationItem", locationItem);
+        const defaultDisplayForm =
+            /*displayForms?.find(displayForm => displayForm.type === undefined)?.ref ||*/ dfRef;
+        const tooltipText = isUriRef(defaultDisplayForm)
+            ? defaultDisplayForm.uri
+            : defaultDisplayForm.identifier;
 
         set(referencePointConfigured, "properties", {
             controls: {

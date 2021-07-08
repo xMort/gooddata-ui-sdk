@@ -168,6 +168,12 @@ export interface ISort {
     direction: "asc" | "desc";
 }
 
+export interface IDisplayForm {
+    ref: ObjRef;
+    type: string; // subtype of the display form (e.g. undefined for text display form, GDC.geo.pin, or GDC.link, etc.)
+    title: string;
+}
+
 export interface IBucketItem {
     localIdentifier: string;
     type?: string;
@@ -187,6 +193,7 @@ export interface IBucketItem {
     dfRef?: ObjRef;
     locationDisplayFormRef?: ObjRef;
     dateDatasetRef?: ObjRef;
+    displayForms?: IDisplayForm[];
 }
 
 export interface IFiltersBucketItem extends IBucketItem {
