@@ -69,6 +69,16 @@
         "comment": "",
         "limit": 0
     },
+    "dashboard.bucket.tertiary_measures_title.headline": {
+        "value": "Measure",
+        "comment": "",
+        "limit": 0
+    },
+    "dashboard.bucket.tertiary_measures_subtitle.headline": {
+        "value": "tertiary",
+        "comment": "",
+        "limit": 0
+    },
     "dashboard.bucket.measures_title.scatter": {
         "value": "Measure",
         "comment": "",

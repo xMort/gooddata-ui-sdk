@@ -1,7 +1,6 @@
-// (C) 2007-2020 GoodData Corporation
+// (C) 2007-2021 GoodData Corporation
 import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
-import isNumber from "lodash/isNumber";
 import { DataValue, IDataView, IMeasureDescriptor } from "@gooddata/sdk-backend-spi";
 import invariant from "ts-invariant";
 import { IntlShape } from "react-intl";
@@ -43,33 +42,33 @@ function createHeadlineDataItem(executionDataItem: IHeadlineExecutionData): IHea
     };
 }
 
-function createTertiaryItem(executionData: IHeadlineExecutionData[], intl: IntlShape): IHeadlineDataItem {
-    const secondaryHeaderItem = executionData?.[1]?.measureHeaderItem;
-    if (!secondaryHeaderItem) {
-        return null;
-    }
+// function createTertiaryItem(executionData: IHeadlineExecutionData[], intl: IntlShape): IHeadlineDataItem {
+//     const secondaryHeaderItem = executionData?.[1]?.measureHeaderItem;
+//     if (!secondaryHeaderItem) {
+//         return null;
+//     }
 
-    const primaryValueString = executionData?.[0]?.value;
-    const primaryValue = primaryValueString !== null ? Number(primaryValueString) : null;
-    const secondaryValueString = executionData?.[1]?.value;
-    const secondaryValue = secondaryValueString !== null ? Number(secondaryValueString) : null;
+//     const primaryValueString = executionData?.[0]?.value;
+//     const primaryValue = primaryValueString !== null ? Number(primaryValueString) : null;
+//     const secondaryValueString = executionData?.[1]?.value;
+//     const secondaryValue = secondaryValueString !== null ? Number(secondaryValueString) : null;
 
-    const tertiaryTitle = intl.formatMessage({ id: "visualizations.headline.tertiary.title" });
+//     const tertiaryTitle = intl.formatMessage({ id: "visualizations.headline.tertiary.title" });
 
-    const isCountableValue = isNumber(primaryValue) && isNumber(secondaryValue);
-    const tertiaryValue =
-        isCountableValue && secondaryValue !== 0
-            ? ((primaryValue - secondaryValue) / secondaryValue) * 100
-            : null;
+//     const isCountableValue = isNumber(primaryValue) && isNumber(secondaryValue);
+//     const tertiaryValue =
+//         isCountableValue && secondaryValue !== 0
+//             ? ((primaryValue - secondaryValue) / secondaryValue) * 100
+//             : null;
 
-    return {
-        localIdentifier: "tertiaryIdentifier",
-        title: tertiaryTitle,
-        value: tertiaryValue !== null ? String(tertiaryValue) : null,
-        format: null,
-        isDrillable: false,
-    };
-}
+//     return {
+//         localIdentifier: "tertiaryIdentifier",
+//         title: tertiaryTitle,
+//         value: tertiaryValue !== null ? String(tertiaryValue) : null,
+//         format: null,
+//         isDrillable: false,
+//     };
+// }
 
 function getExecutionData(dv: DataViewFacade): IHeadlineExecutionData[] {
     const headerItems = dv.meta().measureDescriptors();
@@ -95,7 +94,7 @@ function getExecutionData(dv: DataViewFacade): IHeadlineExecutionData[] {
  * @param intl - Required localization for compare item title
  * @returns {*}
  */
-export function getHeadlineData(dataView: IDataView, intl: IntlShape): IHeadlineData {
+export function getHeadlineData(dataView: IDataView, _intl: IntlShape): IHeadlineData {
     const dv = DataViewFacade.for(dataView);
     const executionData = getExecutionData(dv);
 
@@ -104,7 +103,8 @@ export function getHeadlineData(dataView: IDataView, intl: IntlShape): IHeadline
     const secondaryItem = createHeadlineDataItem(executionData[1]);
     const secondaryItemProp = secondaryItem ? { secondaryItem } : {};
 
-    const tertiaryItem = createTertiaryItem(executionData, intl);
+    // const tertiaryItem = createTertiaryItem(executionData, intl);
+    const tertiaryItem = createHeadlineDataItem(executionData[2]);
     const tertiaryItemProp = tertiaryItem ? { tertiaryItem } : {};
 
     return {

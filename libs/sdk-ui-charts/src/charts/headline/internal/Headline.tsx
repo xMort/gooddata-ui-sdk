@@ -6,7 +6,7 @@ import cx from "classnames";
 import { HeadlineElementType } from "@gooddata/sdk-ui";
 import { IChartConfig } from "../../../interfaces";
 import { IFormattedHeadlineDataItem, IHeadlineData, IHeadlineDataItem } from "../Headlines";
-import { formatItemValue, formatPercentageValue } from "./utils/HeadlineDataItemUtils";
+import { formatItemValue } from "./utils/HeadlineDataItemUtils";
 import { Identifier } from "@gooddata/sdk-model";
 import noop from "lodash/noop";
 import {
@@ -86,14 +86,19 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         ]);
     }
 
-    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem) {
-        return cx([
-            "gd-flex-item",
-            "headline-compare-section-item",
-            "headline-secondary-item",
-            "s-headline-secondary-item",
-            ...this.getDrillableClasses(secondaryItem.isDrillable),
-        ]);
+    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem, isTertiaryVisible: boolean) {
+        return cx(
+            [
+                "gd-flex-item",
+                "headline-compare-section-item",
+                "headline-secondary-item",
+                "s-headline-secondary-item",
+                ...this.getDrillableClasses(secondaryItem.isDrillable),
+            ],
+            {
+                "with-border": isTertiaryVisible,
+            },
+        );
     }
 
     private getValueWrapperClasses(formattedItem: IFormattedHeadlineDataItem) {
@@ -141,7 +146,10 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         const {
             data: { tertiaryItem },
         } = this.props;
-        const formattedItem = formatPercentageValue(tertiaryItem);
+        if (!tertiaryItem) {
+            return;
+        }
+        const formattedItem = formatItemValue(tertiaryItem);
 
         return (
             <div className="gd-flex-item headline-compare-section-item headline-tertiary-item s-headline-tertiary-item">
@@ -155,7 +163,7 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
 
     private renderSecondaryItem = () => {
         const {
-            data: { secondaryItem },
+            data: { secondaryItem, tertiaryItem },
             config,
         } = this.props;
 
@@ -167,7 +175,10 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
             : this.renderHeadlineItemAsValue(formattedItem);
 
         return (
-            <div className={this.getSecondaryItemClasses(secondaryItem)} onClick={valueClickCallback}>
+            <div
+                className={this.getSecondaryItemClasses(secondaryItem, !!tertiaryItem)}
+                onClick={valueClickCallback}
+            >
                 <div
                     className="headline-value-wrapper s-headline-value-wrapper"
                     style={formattedItem.cssStyle}

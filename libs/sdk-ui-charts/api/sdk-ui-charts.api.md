@@ -324,6 +324,7 @@ export interface IGridConfig {
 
 // @public (undocumented)
 export interface IHeadlineBucketProps {
+    changeMeasure?: MeasureOrPlaceholder;
     filters?: NullableFiltersOrPlaceholders;
     placeholdersResolutionContext?: any;
     primaryMeasure: MeasureOrPlaceholder;

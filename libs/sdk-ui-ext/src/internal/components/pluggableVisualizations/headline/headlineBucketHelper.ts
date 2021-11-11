@@ -1,4 +1,4 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import cloneDeep from "lodash/cloneDeep";
 import every from "lodash/every";
 import { BucketNames } from "@gooddata/sdk-ui";
@@ -11,9 +11,9 @@ import {
     findMasterBucketItems,
 } from "../../../utils/bucketHelper";
 
-export function findSecondMasterMeasure(allMeasures: IBucketItem[]): IBucketItem {
+export function findNthMasterMeasure(allMeasures: IBucketItem[], index: number): IBucketItem {
     const masterBucketItems = findMasterBucketItems(allMeasures);
-    return masterBucketItems.length > 1 ? masterBucketItems[1] : null;
+    return masterBucketItems.length > index ? masterBucketItems[index] : null;
 }
 
 export function tryToMapForeignBuckets(
@@ -62,6 +62,7 @@ export function setHeadlineRefPointBuckets(
     extendedReferencePoint: Readonly<IExtendedReferencePoint>,
     primaryMeasure?: IBucketItem,
     secondaryMeasure?: IBucketItem,
+    changeMeasure?: IBucketItem,
 ): IExtendedReferencePoint {
     const newReferencePoint: IExtendedReferencePoint = cloneDeep(extendedReferencePoint);
 
@@ -73,6 +74,10 @@ export function setHeadlineRefPointBuckets(
         {
             localIdentifier: BucketNames.SECONDARY_MEASURES,
             items: secondaryMeasure ? [secondaryMeasure] : [],
+        },
+        {
+            localIdentifier: BucketNames.TERTIARY_MEASURES,
+            items: changeMeasure ? [changeMeasure] : [],
         },
     ];
 

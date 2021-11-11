@@ -7,6 +7,7 @@ import { BucketNames } from "@gooddata/sdk-ui";
 import { CoreHeadline, updateConfigWithSettings } from "@gooddata/sdk-ui-charts";
 import React from "react";
 import { render } from "react-dom";
+import { v4 as uuidv4 } from "uuid";
 import { METRIC } from "../../../constants/bucket";
 import {
     IBucketItem,
@@ -45,14 +46,49 @@ import UnsupportedConfigurationPanel from "../../configurationPanels/Unsupported
 import { AbstractPluggableVisualization } from "../AbstractPluggableVisualization";
 import {
     findComplementaryOverTimeComparisonMeasure,
-    findSecondMasterMeasure,
+    findNthMasterMeasure,
     setHeadlineRefPointBuckets,
     tryToMapForeignBuckets,
 } from "./headlineBucketHelper";
 import cloneDeep from "lodash/cloneDeep";
+import { getTranslation } from "../../../utils/translations";
+import { IntlShape } from "react-intl";
+
+const getDefaultChangeMeasure = (
+    primaryMeasure: IBucketItem,
+    secondaryMeasure: IBucketItem,
+    intl: IntlShape,
+): IBucketItem | undefined => {
+    if (primaryMeasure && secondaryMeasure) {
+        return {
+            alias: getTranslation("kpiPop.change", intl),
+            operator: "change",
+            operandLocalIdentifiers: [primaryMeasure.localIdentifier, secondaryMeasure.localIdentifier],
+            localIdentifier: uuidv4().replace(/-/g, ""),
+            format: "#,##0%",
+            type: "metric",
+            attribute: null,
+            filters: [],
+        };
+    }
+};
+
+const secondaryMeasureWasAddedRightNow = (
+    lastReferencePoint: IReferencePoint,
+    newReferencePoint: IReferencePoint,
+): boolean => {
+    return (
+        !!lastReferencePoint &&
+        !!lastReferencePoint.buckets[0] &&
+        !!lastReferencePoint.buckets[1] &&
+        !!lastReferencePoint.buckets[0].items[0] &&
+        !lastReferencePoint.buckets[1].items[0] &&
+        !!newReferencePoint.buckets[0].items[0] &&
+        !!newReferencePoint.buckets[1].items[0]
+    );
+};
 
 export class PluggableHeadline extends AbstractPluggableVisualization {
-    // private projectId: string;
     private readonly settings?: ISettings;
     private readonly renderFun: RenderFunction;
 
@@ -70,6 +106,8 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
 
     public getExtendedReferencePoint(
         referencePoint: Readonly<IReferencePoint>,
+        previousReferencePoint?: Readonly<IReferencePoint>,
+        onNewDerivedBucketItemsPlaced?: (referencePoint: IReferencePoint) => void,
     ): Promise<IExtendedReferencePoint> {
         const referencePointCloned = cloneDeep(referencePoint);
         let newReferencePoint: IExtendedReferencePoint = {
@@ -87,18 +125,38 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
         if (mappedReferencePoint) {
             newReferencePoint = mappedReferencePoint;
         } else {
-            const limitedBuckets = limitNumberOfMeasuresInBuckets(newReferencePoint.buckets, 2, true);
+            const limitedBuckets = limitNumberOfMeasuresInBuckets(newReferencePoint.buckets, 3, true);
             const allMeasures = getAllItemsByType(limitedBuckets, [METRIC]);
             const primaryMeasure = allMeasures.length > 0 ? allMeasures[0] : null;
             const secondaryMeasure =
                 findComplementaryOverTimeComparisonMeasure(primaryMeasure, allMeasures) ||
-                findSecondMasterMeasure(allMeasures);
+                findNthMasterMeasure(allMeasures, 1);
+
+            const changeMeasure = findNthMasterMeasure(allMeasures, 2);
 
             newReferencePoint = setHeadlineRefPointBuckets(
                 newReferencePoint,
                 primaryMeasure,
                 secondaryMeasure,
+                changeMeasure,
             );
+        }
+        // calculate default change if needed
+        const providedChangeMeasure = newReferencePoint.buckets[2].items[0];
+        let shouldCall = false;
+        if (
+            !providedChangeMeasure &&
+            secondaryMeasureWasAddedRightNow(previousReferencePoint, newReferencePoint)
+        ) {
+            const defaultChangeMeasure = getDefaultChangeMeasure(
+                newReferencePoint.buckets[0].items[0],
+                newReferencePoint.buckets[1].items[0],
+                this.intl,
+            );
+            if (defaultChangeMeasure) {
+                newReferencePoint.buckets[2].items.push(defaultChangeMeasure);
+                shouldCall = true;
+            }
         }
 
         configurePercent(newReferencePoint, true);
@@ -111,8 +169,11 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
             this.supportedPropertiesList,
         );
         newReferencePoint = removeSort(newReferencePoint);
-
-        return Promise.resolve(sanitizeFilters(newReferencePoint));
+        const finalReferencePoint = sanitizeFilters(newReferencePoint);
+        if (shouldCall) {
+            onNewDerivedBucketItemsPlaced(finalReferencePoint);
+        }
+        return Promise.resolve(finalReferencePoint);
     }
 
     protected checkBeforeRender(insight: IInsightDefinition): boolean {

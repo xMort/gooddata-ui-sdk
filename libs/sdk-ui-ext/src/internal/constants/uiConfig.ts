@@ -431,6 +431,12 @@ export const DEFAULT_HEADLINE_UICONFIG: IUiConfig = {
             isShowInPercentVisible: false,
             allowsReordering: false,
         },
+        tertiary_measures: {
+            ...measuresBase,
+            itemsLimit: DEFAULT_HEADLINE_METRICS_COUNT,
+            isShowInPercentVisible: false,
+            allowsReordering: false,
+        },
         ...defaultFilters,
     },
     ...defaultRootUiConfigProperties,
