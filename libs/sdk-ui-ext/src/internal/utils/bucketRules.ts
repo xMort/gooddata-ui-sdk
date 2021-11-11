@@ -71,6 +71,9 @@ export function hasNoMeasures(buckets: IBucketOfFun[]): boolean {
 export function hasNoSecondaryMeasures(buckets: IBucketOfFun[]): boolean {
     return getItemsCount(buckets, BucketNames.SECONDARY_MEASURES) === 0;
 }
+export function hasNoTertiaryMeasures(buckets: IBucketOfFun[]): boolean {
+    return getItemsCount(buckets, BucketNames.TERTIARY_MEASURES) === 0;
+}
 
 export function hasNoAttribute(buckets: IBucketOfFun[]): boolean {
     return getItemsCount(buckets, BucketNames.ATTRIBUTE) === 0;

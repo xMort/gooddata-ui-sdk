@@ -1,10 +1,10 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import { DEFAULT_HEADLINE_UICONFIG } from "../../../../constants/uiConfig";
 import { IBucketOfFun, IBucketItem, IExtendedReferencePoint } from "../../../../interfaces/Visualization";
 import * as referencePointMocks from "../../../../tests/mocks/referencePointMocks";
 import {
     findComplementaryOverTimeComparisonMeasure,
-    findSecondMasterMeasure,
+    findNthMasterMeasure,
     setHeadlineRefPointBuckets,
     tryToMapForeignBuckets,
 } from "../headlineBucketHelper";
@@ -26,7 +26,7 @@ describe("headlineBucketHelper", () => {
 
     describe("findSecondMasterMeasure", () => {
         it("should return null when no measures provided", () => {
-            expect(findSecondMasterMeasure([])).toBe(null);
+            expect(findNthMasterMeasure([], 1)).toBe(null);
         });
 
         it("should return null when no master measure provided", () => {
@@ -45,7 +45,7 @@ describe("headlineBucketHelper", () => {
                 },
             ];
 
-            expect(findSecondMasterMeasure(measures)).toBe(null);
+            expect(findNthMasterMeasure(measures, 1)).toBe(null);
         });
 
         it("should return second measure when more measures provided", () => {
@@ -60,7 +60,7 @@ describe("headlineBucketHelper", () => {
                 { localIdentifier: "m2", type: "metric" },
             ];
 
-            expect(findSecondMasterMeasure(measures)).toEqual({
+            expect(findNthMasterMeasure(measures, 1)).toEqual({
                 localIdentifier: "m2",
                 type: "metric",
             });

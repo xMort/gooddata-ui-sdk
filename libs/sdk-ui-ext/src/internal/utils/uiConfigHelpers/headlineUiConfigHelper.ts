@@ -1,4 +1,4 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import cloneDeep from "lodash/cloneDeep";
 import set from "lodash/set";
 import { IntlShape } from "react-intl";
@@ -8,13 +8,14 @@ import { IUiConfig, IReferencePoint } from "../../interfaces/Visualization";
 import { DEFAULT_HEADLINE_UICONFIG } from "../../constants/uiConfig";
 import { BUCKETS } from "../../constants/bucket";
 
-import { hasNoMeasures, hasNoSecondaryMeasures } from "./../bucketRules";
+import { hasNoMeasures, hasNoSecondaryMeasures, hasNoTertiaryMeasures } from "./../bucketRules";
 
 import { setBucketTitles, getItemsCount } from "./../bucketHelper";
 import { getTranslation } from "./../translations";
 
 import headlineMeasuresIcon from "../../assets/headline/bucket-title-measures.svg";
 import headlineSecondaryMeasuresIcon from "../../assets/headline/bucket-title-secondary-measures.svg";
+import headlineTertiaryMeasuresIcon from "../../assets/headline/bucket-title-tertiary-measures.svg";
 
 export function getDefaultHeadlineUiConfig(): IUiConfig {
     return cloneDeep(DEFAULT_HEADLINE_UICONFIG);
@@ -26,6 +27,7 @@ export function getHeadlineUiConfig(referencePoint: IReferencePoint, intl: IntlS
     const buckets = referencePoint?.buckets ?? [];
     const viewCanAddPrimaryItems = hasNoMeasures(buckets);
     const viewCanAddSecondaryItems = hasNoSecondaryMeasures(buckets);
+    const viewCanAddTertiaryItems = hasNoTertiaryMeasures(buckets);
 
     uiConfig = setBucketTitles(
         {
@@ -38,9 +40,11 @@ export function getHeadlineUiConfig(referencePoint: IReferencePoint, intl: IntlS
 
     set(uiConfig, [BUCKETS, BucketNames.MEASURES, "canAddItems"], viewCanAddPrimaryItems);
     set(uiConfig, [BUCKETS, BucketNames.SECONDARY_MEASURES, "canAddItems"], viewCanAddSecondaryItems);
+    set(uiConfig, [BUCKETS, BucketNames.TERTIARY_MEASURES, "canAddItems"], viewCanAddTertiaryItems);
 
     set(uiConfig, [BUCKETS, BucketNames.MEASURES, "icon"], headlineMeasuresIcon);
     set(uiConfig, [BUCKETS, BucketNames.SECONDARY_MEASURES, "icon"], headlineSecondaryMeasuresIcon);
+    set(uiConfig, [BUCKETS, BucketNames.TERTIARY_MEASURES, "icon"], headlineTertiaryMeasuresIcon);
 
     const primaryMeasuresCount = getItemsCount(buckets, BucketNames.MEASURES);
     const secondaryMeasuresCount = getItemsCount(buckets, BucketNames.SECONDARY_MEASURES);

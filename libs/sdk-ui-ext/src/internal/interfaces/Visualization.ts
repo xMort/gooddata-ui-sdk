@@ -194,6 +194,7 @@ export interface IBucketItem {
     locationDisplayFormRef?: ObjRef;
     dateDatasetRef?: ObjRef;
     displayForms?: IDisplayForm[];
+    title?: string;
 }
 
 export interface IFiltersBucketItem extends IBucketItem {

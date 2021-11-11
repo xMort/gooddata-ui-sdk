@@ -45,16 +45,48 @@ import UnsupportedConfigurationPanel from "../../configurationPanels/Unsupported
 import { AbstractPluggableVisualization } from "../AbstractPluggableVisualization";
 import {
     findComplementaryOverTimeComparisonMeasure,
-    findSecondMasterMeasure,
+    findNthMasterMeasure,
     setHeadlineRefPointBuckets,
     tryToMapForeignBuckets,
 } from "./headlineBucketHelper";
 import cloneDeep from "lodash/cloneDeep";
 
+const getDefaultChangeMeasure = (
+    primaryMeasure: IBucketItem,
+    secondaryMeasure: IBucketItem,
+): IBucketItem | undefined => {
+    if (primaryMeasure && secondaryMeasure) {
+        return {
+            title: "kokutek",
+            operator: "change",
+            operandLocalIdentifiers: [primaryMeasure.localIdentifier, secondaryMeasure.localIdentifier],
+            localIdentifier: `${primaryMeasure.localIdentifier}-${secondaryMeasure.localIdentifier}`,
+            format: "#,##0.00%",
+            type: "metric",
+            attribute: null,
+            filters: [],
+        };
+    }
+};
+
+const secondaryMeasureWasAddedRightNow = (
+    lastReferencePoint: IReferencePoint,
+    newReferencePoint: IReferencePoint,
+): boolean => {
+    return (
+        true ||
+        (!!lastReferencePoint &&
+            !!lastReferencePoint.buckets[0].items[0] &&
+            !lastReferencePoint.buckets[1].items[0] &&
+            !!newReferencePoint.buckets[0].items[0] &&
+            !!newReferencePoint.buckets[1].items[0])
+    );
+};
+
 export class PluggableHeadline extends AbstractPluggableVisualization {
-    // private projectId: string;
     private readonly settings?: ISettings;
     private readonly renderFun: RenderFunction;
+    private lastReferencePoint: Readonly<IReferencePoint>;
 
     constructor(props: IVisConstruct) {
         super(props);
@@ -82,23 +114,44 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
             newReferencePoint = removeAllDerivedMeasures(newReferencePoint);
         }
 
+        console.log("ref point");
         const mappedReferencePoint = tryToMapForeignBuckets(newReferencePoint);
 
         if (mappedReferencePoint) {
             newReferencePoint = mappedReferencePoint;
         } else {
-            const limitedBuckets = limitNumberOfMeasuresInBuckets(newReferencePoint.buckets, 2, true);
+            const limitedBuckets = limitNumberOfMeasuresInBuckets(newReferencePoint.buckets, 3, true);
             const allMeasures = getAllItemsByType(limitedBuckets, [METRIC]);
             const primaryMeasure = allMeasures.length > 0 ? allMeasures[0] : null;
             const secondaryMeasure =
                 findComplementaryOverTimeComparisonMeasure(primaryMeasure, allMeasures) ||
-                findSecondMasterMeasure(allMeasures);
+                findNthMasterMeasure(allMeasures, 1);
+
+            const providedChangeMeasure = findNthMasterMeasure(allMeasures, 2);
+            const changeMeasure = providedChangeMeasure
+                ? providedChangeMeasure
+                : getDefaultChangeMeasure(primaryMeasure, secondaryMeasure);
 
             newReferencePoint = setHeadlineRefPointBuckets(
                 newReferencePoint,
                 primaryMeasure,
                 secondaryMeasure,
+                changeMeasure,
             );
+        }
+        // calculate default change if needed
+        const providedChangeMeasure = newReferencePoint.buckets[2].items[0];
+        if (
+            !providedChangeMeasure &&
+            secondaryMeasureWasAddedRightNow(this.lastReferencePoint, newReferencePoint)
+        ) {
+            const defaultChangeMeasure = getDefaultChangeMeasure(
+                newReferencePoint.buckets[0].items[0],
+                newReferencePoint.buckets[1].items[0],
+            );
+            if (defaultChangeMeasure) {
+                newReferencePoint.buckets[2].items.push(defaultChangeMeasure);
+            }
         }
 
         configurePercent(newReferencePoint, true);
@@ -111,6 +164,7 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
             this.supportedPropertiesList,
         );
         newReferencePoint = removeSort(newReferencePoint);
+        this.lastReferencePoint = cloneDeep(newReferencePoint);
 
         return Promise.resolve(sanitizeFilters(newReferencePoint));
     }

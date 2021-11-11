@@ -86,14 +86,19 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         ]);
     }
 
-    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem) {
-        return cx([
-            "gd-flex-item",
-            "headline-compare-section-item",
-            "headline-secondary-item",
-            "s-headline-secondary-item",
-            ...this.getDrillableClasses(secondaryItem.isDrillable),
-        ]);
+    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem, isTertiraryVisible: boolean) {
+        return cx(
+            [
+                "gd-flex-item",
+                "headline-compare-section-item",
+                "headline-secondary-item",
+                "s-headline-secondary-item",
+                ...this.getDrillableClasses(secondaryItem.isDrillable),
+            ],
+            {
+                "with-border": isTertiraryVisible,
+            },
+        );
     }
 
     private getValueWrapperClasses(formattedItem: IFormattedHeadlineDataItem) {
@@ -141,6 +146,9 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         const {
             data: { tertiaryItem },
         } = this.props;
+        if (!tertiaryItem) {
+            return;
+        }
         const formattedItem = formatPercentageValue(tertiaryItem);
 
         return (
@@ -155,7 +163,7 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
 
     private renderSecondaryItem = () => {
         const {
-            data: { secondaryItem },
+            data: { secondaryItem, tertiaryItem },
             config,
         } = this.props;
 
@@ -167,7 +175,10 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
             : this.renderHeadlineItemAsValue(formattedItem);
 
         return (
-            <div className={this.getSecondaryItemClasses(secondaryItem)} onClick={valueClickCallback}>
+            <div
+                className={this.getSecondaryItemClasses(secondaryItem, !!tertiaryItem)}
+                onClick={valueClickCallback}
+            >
                 <div
                     className="headline-value-wrapper s-headline-value-wrapper"
                     style={formattedItem.cssStyle}
