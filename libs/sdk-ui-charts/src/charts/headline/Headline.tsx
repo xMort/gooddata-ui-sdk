@@ -90,12 +90,16 @@ type IHeadlineNonBucketProps = Subtract<IHeadlineProps, IIrrelevantHeadlineProps
 
 function defineChangeMeasure(primaryMeasure: IMeasure, secondaryMeasure: IMeasure) {
     if (primaryMeasure && secondaryMeasure) {
-        return newArithmeticMeasure([primaryMeasure, secondaryMeasure], "change");
+        return newArithmeticMeasure(
+            [primaryMeasure, secondaryMeasure],
+            "change",
+            (m) => m.title("Change"), // TODO INE add localization
+        );
     }
 }
 
 export function toCoreHeadlineProps(props: IHeadlineProps): ICoreChartProps {
-    console.log("toCoreHeadlineProps");
+    // TODO INE this automatic generation does not allow to have Headline without tertiary info
     const usedChangeMeasure = props.changeMeasure
         ? props.changeMeasure
         : defineChangeMeasure(props.primaryMeasure as IMeasure, props.secondaryMeasure as IMeasure);

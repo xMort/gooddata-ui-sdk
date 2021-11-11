@@ -51,7 +51,6 @@ class HeadlineTransformation extends React.Component<IHeadlineTransformationProp
         const { intl, drillableItems, dataView, config, onAfterRender } = this.props;
 
         const data = getHeadlineData(dataView, intl);
-        console.log("getHeadlineData", data);
         const drillablePredicates = convertDrillableItemsToPredicates(drillableItems);
         const dataWithUpdatedDrilling = applyDrillableItems(data, drillablePredicates, dataView);
         const disableDrillUnderline = this.getDisableDrillUnderlineFromConfig();

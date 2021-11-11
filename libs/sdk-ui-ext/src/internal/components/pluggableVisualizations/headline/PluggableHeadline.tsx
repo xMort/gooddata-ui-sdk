@@ -7,6 +7,7 @@ import { BucketNames } from "@gooddata/sdk-ui";
 import { CoreHeadline, updateConfigWithSettings } from "@gooddata/sdk-ui-charts";
 import React from "react";
 import { render } from "react-dom";
+import { v4 as uuidv4 } from "uuid";
 import { METRIC } from "../../../constants/bucket";
 import {
     IBucketItem,
@@ -63,7 +64,7 @@ const getDefaultChangeMeasure = (
             alias: getTranslation("kpiPop.change", intl),
             operator: "change",
             operandLocalIdentifiers: [primaryMeasure.localIdentifier, secondaryMeasure.localIdentifier],
-            localIdentifier: `${primaryMeasure.localIdentifier}-${secondaryMeasure.localIdentifier}`,
+            localIdentifier: uuidv4().replace(/-/g, ""),
             format: "#,##0%",
             type: "metric",
             attribute: null,
