@@ -26,6 +26,9 @@ import {
     measurePreviousPeriodDateDataSets,
     measureFilters,
     IPreviousPeriodDateDataSet,
+    IConstantMeasureDefinition,
+    measureConstantValue,
+    isConstantMeasure,
 } from "@gooddata/sdk-model";
 import isEmpty from "lodash/isEmpty";
 import { toBearRef } from "./ObjRefConverter";
@@ -74,6 +77,16 @@ const convertArithmeticMeasureDefinition = (
     };
 };
 
+const convertConstantMeasureDefinition = (
+    measure: IMeasure<IConstantMeasureDefinition>,
+): GdcVisualizationObject.IConstantMeasureDefinition => {
+    return {
+        constantMeasure: {
+            value: measureConstantValue(measure)!,
+        },
+    };
+};
+
 const convertSimpleMeasureDefinition = (
     measure: IMeasure<IMeasureDefinition>,
 ): GdcVisualizationObject.IMeasureDefinition => {
@@ -109,6 +122,8 @@ const convertMeasureDefinition = (
         return convertPoPMeasureDefinition(measure);
     } else if (isPreviousPeriodMeasure(measure)) {
         return convertPreviousPeriodMeasureDefinition(measure);
+    } else if (isConstantMeasure(measure)) {
+        return convertConstantMeasureDefinition(measure);
     }
 
     throw new Error("Unknown measure type");

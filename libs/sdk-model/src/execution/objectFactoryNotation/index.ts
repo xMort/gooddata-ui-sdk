@@ -1,4 +1,4 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import flow from "lodash/flow";
 import identity from "lodash/identity";
 import isArray from "lodash/isArray";
@@ -44,6 +44,8 @@ import {
     IArithmeticMeasureDefinition,
     IPoPMeasureDefinition,
     IPreviousPeriodMeasureDefinition,
+    IConstantMeasureDefinition,
+    isConstantMeasureDefinition,
 } from "../measure";
 import { isAttribute, IAttribute } from "../attribute";
 
@@ -119,6 +121,13 @@ const convertArithmeticMeasure = (measure: IMeasure["measure"], definition: IAri
     }", ${builder})`;
 };
 
+const convertConstantMeasure = (measure: IMeasure["measure"], definition: IConstantMeasureDefinition) => {
+    const builder = getBuilder("m => m", baseMeasureDotAdders(measure));
+    return `newConstantMeasure(${stringify(definition.constantMeasure.value)}, "${
+        definition.constantMeasure.value
+    }", ${builder})`;
+};
+
 const convertPopMeasure = (measure: IMeasure["measure"], definition: IPoPMeasureDefinition) => {
     const builder = getBuilder("m => m", baseMeasureDotAdders(measure));
     return `newPopMeasure("${definition.popMeasureDefinition.measureIdentifier}", "${getObjQualifierValue(
@@ -154,6 +163,8 @@ const convertMeasure: Converter<IMeasure> = ({ measure }) => {
         return convertPopMeasure(measure, definition);
     } else if (isPreviousPeriodMeasureDefinition(definition)) {
         return convertPreviousPeriodMeasure(measure, definition);
+    } else if (isConstantMeasureDefinition(definition)) {
+        return convertConstantMeasure(measure, definition);
     }
     throw new Error("Unknown measure type");
 };

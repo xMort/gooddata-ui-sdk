@@ -132,6 +132,9 @@ const convertMeasureDefinition = (
     if (GdcVisualizationObject.isPreviousPeriodMeasureDefinition(definition)) {
         return definition;
     }
+    if (GdcVisualizationObject.isConstantMeasureDefinition(definition)) {
+        return definition;
+    }
     const { filters } = definition.measureDefinition;
     return {
         measureDefinition: {

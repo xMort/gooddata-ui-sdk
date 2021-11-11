@@ -11,6 +11,8 @@ import {
     isPoPMeasureDefinition,
     isPreviousPeriodMeasureDefinition,
     MeasureAggregation,
+    isConstantMeasureDefinition,
+    IConstantMeasureDefinition,
 } from "@gooddata/sdk-model";
 import { GdcExecuteAFM } from "@gooddata/api-model-bear";
 import { convertMeasureFilter } from "./FilterConverter";
@@ -58,6 +60,8 @@ function convertMeasureDefinition(definition: IMeasureDefinitionType): GdcExecut
         return convertPreviousPeriodMeasureDefinition(definition);
     } else if (isArithmeticMeasureDefinition(definition)) {
         return convertArithmeticMeasureDefinition(definition);
+    } else if (isConstantMeasureDefinition(definition)) {
+        return convertConstantMeasureDefinition(definition);
     } else {
         throw Error("The measure definition is not supported: " + JSON.stringify(definition));
     }
@@ -122,6 +126,17 @@ function convertArithmeticMeasureDefinition(
         arithmeticMeasure: {
             measureIdentifiers: arithmeticMeasure.measureIdentifiers.slice(),
             operator: arithmeticMeasure.operator,
+        },
+    };
+}
+
+function convertConstantMeasureDefinition(
+    definition: IConstantMeasureDefinition,
+): GdcExecuteAFM.IConstantMeasureDefinition {
+    const { constantMeasure } = definition;
+    return {
+        constantMeasure: {
+            value: constantMeasure.value,
         },
     };
 }

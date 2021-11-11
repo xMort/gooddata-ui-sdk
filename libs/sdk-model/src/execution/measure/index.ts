@@ -15,7 +15,8 @@ export type IMeasureDefinitionType =
     | IMeasureDefinition
     | IArithmeticMeasureDefinition
     | IPoPMeasureDefinition
-    | IPreviousPeriodMeasureDefinition;
+    | IPreviousPeriodMeasureDefinition
+    | IConstantMeasureDefinition;
 
 /**
  * All types of measures have a set of common properties; those are defined here. The measure-type-specific
@@ -122,6 +123,18 @@ export interface IArithmeticMeasureDefinition {
     arithmeticMeasure: {
         measureIdentifiers: Identifier[];
         operator: ArithmeticMeasureOperator;
+    };
+}
+
+/**
+ * Constant measures are defined by its numerical value that they returns in every execution.
+ * They can be used to define target goals in charts or headlines or for arithmetic operations in arithmetic measures.
+ *
+ * @public
+ */
+export interface IConstantMeasureDefinition {
+    constantMeasure: {
+        value: number;
     };
 }
 
@@ -261,6 +274,15 @@ export function isArithmeticMeasure(obj: unknown): obj is IMeasure<IArithmeticMe
 }
 
 /**
+ * Type guard for checking whether object is an constant measure.
+ *
+ * @public
+ */
+export function isConstantMeasure(obj: unknown): obj is IMeasure<IConstantMeasureDefinition> {
+    return isMeasure(obj) && isConstantMeasureDefinition(obj.measure.definition);
+}
+
+/**
  * Type guard for checking whether object is a measure definition.
  *
  * @public
@@ -294,6 +316,15 @@ export function isPreviousPeriodMeasureDefinition(obj: unknown): obj is IPreviou
  */
 export function isArithmeticMeasureDefinition(obj: unknown): obj is IArithmeticMeasureDefinition {
     return !isEmpty(obj) && (obj as IArithmeticMeasureDefinition).arithmeticMeasure !== undefined;
+}
+
+/**
+ * Type guard for checking whether object is an constant measure definition.
+ *
+ * @public
+ */
+export function isConstantMeasureDefinition(obj: unknown): obj is IConstantMeasureDefinition {
+    return !isEmpty(obj) && (obj as IConstantMeasureDefinition).constantMeasure !== undefined;
 }
 
 //
@@ -480,6 +511,33 @@ export function measureArithmeticOperator(measure: IMeasure): ArithmeticMeasureO
     }
 
     return measure.measure.definition.arithmeticMeasure.operator;
+}
+
+/**
+ * Gets constant value from the provided constant measure.
+ *
+ * @param measure - measure to get constant value from
+ * @returns constant value of the measure
+ * @public
+ */
+export function measureConstantValue(measure: IMeasure<IConstantMeasureDefinition>): number;
+/**
+ * Gets constant value from the provided measure. If the measure is not an constant measure, then
+ * undefined is returned.
+ *
+ * @param measure - measure to get constant value from
+ * @returns constant value of the measure, or undefined if measure is not constant
+ * @public
+ */
+export function measureConstantValue(measure: IMeasure): number | undefined;
+export function measureConstantValue(measure: IMeasure): number | undefined {
+    invariant(measure, "measure must be specified");
+
+    if (!isConstantMeasure(measure)) {
+        return undefined;
+    }
+
+    return measure.measure.definition.constantMeasure.value;
 }
 
 /**

@@ -1,4 +1,4 @@
-// (C) 2019-2020 GoodData Corporation
+// (C) 2019-2021 GoodData Corporation
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 
@@ -46,7 +46,8 @@ export namespace GdcExecuteAFM {
         | ISimpleMeasureDefinition
         | IArithmeticMeasureDefinition
         | IPopMeasureDefinition
-        | IPreviousPeriodMeasureDefinition;
+        | IPreviousPeriodMeasureDefinition
+        | IConstantMeasureDefinition;
 
     export interface ISimpleMeasureDefinition {
         measure: ISimpleMeasure;
@@ -54,6 +55,10 @@ export namespace GdcExecuteAFM {
 
     export interface IArithmeticMeasureDefinition {
         arithmeticMeasure: IArithmeticMeasure;
+    }
+
+    export interface IConstantMeasureDefinition {
+        constantMeasure: IConstantMeasure;
     }
 
     export interface IPopMeasureDefinition {
@@ -78,6 +83,10 @@ export namespace GdcExecuteAFM {
     export interface IArithmeticMeasure {
         measureIdentifiers: Identifier[];
         operator: ArithmeticMeasureOperator;
+    }
+
+    export interface IConstantMeasure {
+        value: number;
     }
 
     export interface IPopMeasure {
@@ -319,6 +328,15 @@ export namespace GdcExecuteAFM {
         return (
             !isEmpty(definition) &&
             (definition as GdcExecuteAFM.IArithmeticMeasureDefinition).arithmeticMeasure !== undefined
+        );
+    }
+
+    export function isConstantMeasureDefinition(
+        definition: GdcExecuteAFM.MeasureDefinition,
+    ): definition is GdcExecuteAFM.IConstantMeasureDefinition {
+        return (
+            !isEmpty(definition) &&
+            (definition as GdcExecuteAFM.IConstantMeasureDefinition).constantMeasure !== undefined
         );
     }
 

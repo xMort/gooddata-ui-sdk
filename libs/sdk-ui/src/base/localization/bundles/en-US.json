@@ -330,6 +330,11 @@
         "comment": "",
         "limit": 0
     },
+    "visualizations.measure.constant.title": {
+        "value": "Constant value",
+        "comment": "Title of an constant measure.",
+        "limit": 0
+    },
     "visualizations.measure.arithmetic.sum.title": {
         "value": "Sum of {firstMeasureTitle} and {secondMeasureTitle}",
         "comment": "Title of an arithmetic measure of type Sum. Don't translate placeholders '{firstMeasureTitle}', '{secondMeasureTitle}'.",

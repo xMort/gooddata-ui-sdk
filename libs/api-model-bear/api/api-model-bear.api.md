@@ -574,6 +574,16 @@ export namespace GdcExecuteAFM {
         };
     }
     // (undocumented)
+    export interface IConstantMeasure {
+        // (undocumented)
+        value: number;
+    }
+    // (undocumented)
+    export interface IConstantMeasureDefinition {
+        // (undocumented)
+        constantMeasure: IConstantMeasure;
+    }
+    // (undocumented)
     export type Identifier = string;
     // (undocumented)
     export interface IDimension {
@@ -754,6 +764,8 @@ export namespace GdcExecuteAFM {
     // (undocumented)
     export function isAttributeSortItem(sortItem: GdcExecuteAFM.SortItem): sortItem is GdcExecuteAFM.IAttributeSortItem;
     // (undocumented)
+    export function isConstantMeasureDefinition(definition: GdcExecuteAFM.MeasureDefinition): definition is GdcExecuteAFM.IConstantMeasureDefinition;
+    // (undocumented)
     export function isDateFilter(filter: GdcExecuteAFM.CompatibilityFilter): filter is GdcExecuteAFM.DateFilterItem;
     // (undocumented)
     export function isExpressionFilter(filter: GdcExecuteAFM.CompatibilityFilter): filter is GdcExecuteAFM.IExpressionFilter;
@@ -825,7 +837,7 @@ export namespace GdcExecuteAFM {
     // (undocumented)
     export type LocatorItem = IAttributeLocatorItem | IMeasureLocatorItem;
     // (undocumented)
-    export type MeasureDefinition = ISimpleMeasureDefinition | IArithmeticMeasureDefinition | IPopMeasureDefinition | IPreviousPeriodMeasureDefinition;
+    export type MeasureDefinition = ISimpleMeasureDefinition | IArithmeticMeasureDefinition | IPopMeasureDefinition | IPreviousPeriodMeasureDefinition | IConstantMeasureDefinition;
     // (undocumented)
     export type MeasureValueFilterCondition = IComparisonCondition | IRangeCondition;
     // (undocumented)
@@ -2598,6 +2610,13 @@ export namespace GdcVisualizationObject {
         };
     }
     // (undocumented)
+    export interface IConstantMeasureDefinition {
+        // (undocumented)
+        constantMeasure: {
+            value: number;
+        };
+    }
+    // (undocumented)
     export type Identifier = string;
     // (undocumented)
     export interface ILocalIdentifierQualifier {
@@ -2633,7 +2652,7 @@ export namespace GdcVisualizationObject {
         };
     }
     // (undocumented)
-    export type IMeasureDefinitionType = IMeasureDefinition | IArithmeticMeasureDefinition | IPoPMeasureDefinition | IPreviousPeriodMeasureDefinition;
+    export type IMeasureDefinitionType = IMeasureDefinition | IArithmeticMeasureDefinition | IPoPMeasureDefinition | IPreviousPeriodMeasureDefinition | IConstantMeasureDefinition;
     // (undocumented)
     export interface IMeasureValueFilter {
         // (undocumented)
@@ -2736,6 +2755,8 @@ export namespace GdcVisualizationObject {
     export function isAttributeFilter(filter: ExtendedFilter): filter is AttributeFilter;
     // (undocumented)
     export function isComparisonCondition(condition: MeasureValueFilterCondition): condition is IComparisonCondition;
+    // (undocumented)
+    export function isConstantMeasureDefinition(definition: IMeasureDefinitionType): definition is IConstantMeasureDefinition;
     // (undocumented)
     export function isDateFilter(filter: ExtendedFilter): filter is DateFilter;
     // (undocumented)

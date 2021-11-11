@@ -70,6 +70,8 @@ export {
     ComparisonMeasureValueFilterBodyOperatorEnum,
     ComparisonMeasureValueFilterBodyAllOf,
     ComparisonMeasureValueFilterBodyAllOfOperatorEnum,
+    ConstantMeasureDefinition,
+    ConstantMeasureDefinitionConstantMeasure,
     DateFilter,
     Dimension,
     DimensionHeader,

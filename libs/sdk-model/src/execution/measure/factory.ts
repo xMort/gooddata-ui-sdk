@@ -19,6 +19,8 @@ import {
     MeasureAggregation,
     measureLocalId,
     MeasureOrLocalId,
+    IConstantMeasureDefinition,
+    isConstantMeasure,
 } from "./index";
 import { Identifier, isObjRef, ObjRef, objRefToString } from "../../objRef";
 import { IMeasureFilter } from "../filter";
@@ -481,6 +483,62 @@ export class ArithmeticMeasureBuilder extends MeasureBuilderBase<IArithmeticMeas
 }
 
 /**
+ * Input to the ConstantMeasureBuilder.
+ * @public
+ */
+export type ConstantMeasureBuilderInput = { value: number } | IMeasure<IConstantMeasureDefinition>;
+
+/**
+ * Builder for constant measures.
+ *
+ * Do not instantiate this builder directly, instead use {@link newConstantMeasure}.
+ *
+ * @public
+ */
+export class ConstantMeasureBuilder extends MeasureBuilderBase<IConstantMeasureDefinition> {
+    private readonly constantMeasure: IConstantMeasureDefinition["constantMeasure"];
+
+    /**
+     * @internal
+     */
+    constructor(input: ConstantMeasureBuilderInput) {
+        super();
+
+        if (isConstantMeasure(input)) {
+            this.initializeFromExisting(input.measure);
+            this.constantMeasure = cloneDeep(input.measure.definition.constantMeasure);
+        } else {
+            this.constantMeasure = {
+                value: input.value,
+            };
+        }
+    }
+
+    /**
+     * Sets measure constant value
+     *
+     * @param value - value
+     */
+    public value = (value: number): this => {
+        this.constantMeasure.value = value;
+
+        return this;
+    };
+
+    protected buildDefinition(): IConstantMeasureDefinition {
+        return {
+            constantMeasure: this.constantMeasure,
+        };
+    }
+
+    protected generateLocalId(): string {
+        const hasher = new SparkMD5();
+        hasher.append(this.constantMeasure.value + "");
+        return hasher.end();
+    }
+}
+
+/**
  * Input to the PoPMeasureBuilder.
  * @public
  */
@@ -698,6 +756,8 @@ function createBuilder(measure: IMeasure): MeasureBuilderBase<IMeasureDefinition
         return new PoPMeasureBuilder(measure);
     } else if (isPreviousPeriodMeasure(measure)) {
         return new PreviousPeriodMeasureBuilder(measure);
+    } else if (isConstantMeasure(measure)) {
+        return new ConstantMeasureBuilder(measure);
     }
 
     throw new InvariantError("unexpected measure type");
@@ -791,6 +851,21 @@ export function newArithmeticMeasure(
     modifications: MeasureModifications<ArithmeticMeasureBuilder> = identity,
 ): IMeasure<IArithmeticMeasureDefinition> {
     const builder = new ArithmeticMeasureBuilder({ measuresOrIds, operator });
+
+    return modifications(builder).build();
+}
+
+/**
+ * Creates a new constant measure with the specified value and optional modifications and localIdentifier.
+ * @param value - value of the constant measure
+ * @param modifications - optional modifications (e.g. alias, title, etc.)
+ * @public
+ */
+export function newConstantMeasure(
+    value: number,
+    modifications: MeasureModifications<ConstantMeasureBuilder> = identity,
+): IMeasure<IConstantMeasureDefinition> {
+    const builder = new ConstantMeasureBuilder({ value });
 
     return modifications(builder).build();
 }

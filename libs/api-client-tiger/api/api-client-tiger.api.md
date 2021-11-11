@@ -635,6 +635,16 @@ export enum ComparisonMeasureValueFilterBodyOperatorEnum {
 }
 
 // @public
+export interface ConstantMeasureDefinition {
+    constantMeasure: ConstantMeasureDefinitionConstantMeasure;
+}
+
+// @public
+export interface ConstantMeasureDefinitionConstantMeasure {
+    value: number;
+}
+
+// @public
 export interface DatasetReferenceIdentifier {
     id: string;
     type: DatasetReferenceIdentifierTypeEnum;
@@ -6626,7 +6636,7 @@ export interface LocalIdentifier {
 }
 
 // @public
-export type MeasureDefinition = ArithmeticMeasureDefinition | InlineMeasureDefinition | PopDatasetMeasureDefinition | PopDateMeasureDefinition | SimpleMeasureDefinition;
+export type MeasureDefinition = ArithmeticMeasureDefinition | InlineMeasureDefinition | PopDatasetMeasureDefinition | PopDateMeasureDefinition | ConstantMeasureDefinition | SimpleMeasureDefinition;
 
 // @public
 export interface MeasureExecutionResultHeader {

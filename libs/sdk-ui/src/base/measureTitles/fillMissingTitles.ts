@@ -18,6 +18,7 @@ import {
     measureArithmeticOperator,
     insightBuckets,
     bucketItems,
+    isConstantMeasure,
 } from "@gooddata/sdk-model";
 import { stringUtils } from "@gooddata/util";
 
@@ -26,6 +27,7 @@ import { ArithmeticMeasureTitleFactory } from "./ArithmeticMeasureTitleFactory";
 import { OverTimeComparisonType, OverTimeComparisonTypes } from "../interfaces/OverTimeComparison";
 import { IMeasureTitleProps } from "./MeasureTitle";
 import { ILocale } from "../localization/Locale";
+import { getTranslation } from "../localization/IntlStore";
 
 const DEFAULT_MAX_ARITHMETIC_MEASURE_TITLE_LENGTH = 50;
 
@@ -154,6 +156,21 @@ function buildDerivedMeasureTitle(
     return null;
 }
 
+function buildConstantMeasureTitle(measure: IMeasure, locale: ILocale): IMeasureTitleProps | null {
+    if (isConstantMeasure(measure)) {
+        const alias = measureAlias(measure);
+        const localIdentifier = measureLocalId(measure);
+
+        return {
+            localIdentifier,
+            title: getTranslation("visualizations.measure.constant.title", locale),
+            alias,
+        };
+    }
+
+    return null;
+}
+
 function buildMeasureTitles(
     measures: IMeasure[],
     locale: ILocale,
@@ -179,7 +196,8 @@ function buildMeasureTitles(
                         titleFactory,
                         maxArithmeticMeasureTitleLength,
                     ) ||
-                    buildDerivedMeasureTitle(measure, measureTitleProps, suffixFactory);
+                    buildDerivedMeasureTitle(measure, measureTitleProps, suffixFactory) ||
+                    buildConstantMeasureTitle(measure, locale);
 
                 if (newMeasureTitleProp !== null) {
                     measureTitleProps.push(newMeasureTitleProp);
@@ -246,6 +264,8 @@ function updateVisualizationObjectTitles<T extends IInsightDefinition>(
  * The arithmetic measures
  * have the title built from the current names of the referenced master measures and type of the arithmetic
  * operation.
+ *
+ * The constant measures have the title set to localized string "Constant value".
  *
  * @param insight - insight or insight definition that must be processed.
  * @param locale - locale used for localization of the measure titles.

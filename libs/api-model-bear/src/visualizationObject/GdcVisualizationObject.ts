@@ -161,7 +161,8 @@ export namespace GdcVisualizationObject {
         | IMeasureDefinition
         | IArithmeticMeasureDefinition
         | IPoPMeasureDefinition
-        | IPreviousPeriodMeasureDefinition;
+        | IPreviousPeriodMeasureDefinition
+        | IConstantMeasureDefinition;
 
     export interface IMeasure {
         measure: IMeasureContent;
@@ -198,6 +199,12 @@ export namespace GdcVisualizationObject {
         arithmeticMeasure: {
             measureIdentifiers: Identifier[];
             operator: ArithmeticMeasureOperator;
+        };
+    }
+
+    export interface IConstantMeasureDefinition {
+        constantMeasure: {
+            value: number;
         };
     }
 
@@ -257,6 +264,14 @@ export namespace GdcVisualizationObject {
         return (
             !isEmpty(definition) &&
             (definition as IArithmeticMeasureDefinition).arithmeticMeasure !== undefined
+        );
+    }
+
+    export function isConstantMeasureDefinition(
+        definition: IMeasureDefinitionType,
+    ): definition is IConstantMeasureDefinition {
+        return (
+            !isEmpty(definition) && (definition as IConstantMeasureDefinition).constantMeasure !== undefined
         );
     }
 

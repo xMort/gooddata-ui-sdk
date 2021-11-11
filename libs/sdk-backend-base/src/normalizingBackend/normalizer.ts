@@ -1,4 +1,4 @@
-// (C) 2007-2020 GoodData Corporation
+// (C) 2007-2021 GoodData Corporation
 import {
     attributeAlias,
     attributeLocalId,
@@ -30,6 +30,7 @@ import {
     IMeasureDefinition,
     isAttributeFilter,
     isRankingFilter,
+    isConstantMeasureDefinition,
 } from "@gooddata/sdk-model";
 import {
     IDimensionDescriptor,
@@ -365,7 +366,7 @@ export class Normalizer {
             this.normalizePreviousPeriod(definition, path);
         } else if (isArithmeticMeasureDefinition(definition)) {
             this.normalizeArithmetic(definition, path);
-        } else {
+        } else if (!isConstantMeasureDefinition(definition)) {
             this.normalizeSimple(definition);
         }
 

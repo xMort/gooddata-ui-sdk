@@ -2,6 +2,7 @@
 import {
     ArithmeticMeasureDefinition,
     ArithmeticMeasureDefinitionArithmeticMeasureOperatorEnum,
+    ConstantMeasureDefinition,
     FilterDefinitionForSimpleMeasure,
     MeasureDefinition,
     MeasureItem,
@@ -13,6 +14,7 @@ import {
 import {
     ArithmeticMeasureOperator,
     IArithmeticMeasureDefinition,
+    IConstantMeasureDefinition,
     IMeasure,
     IMeasureDefinition,
     IMeasureDefinitionType,
@@ -23,6 +25,7 @@ import {
     isPoPMeasureDefinition,
     isPreviousPeriodMeasureDefinition,
     MeasureAggregation,
+    isConstantMeasureDefinition,
 } from "@gooddata/sdk-model";
 import compact from "lodash/compact";
 import { InvariantError } from "ts-invariant";
@@ -64,6 +67,8 @@ function convertMeasureDefinition(definition: IMeasureDefinitionType): MeasureDe
         return convertPreviousPeriodMeasureDefinition(definition);
     } else if (isArithmeticMeasureDefinition(definition)) {
         return convertArithmeticMeasureDefinition(definition);
+    } else if (isConstantMeasureDefinition(definition)) {
+        return convertConstantMeasureDefinition(definition);
     } else {
         throw Error("The measure definition is not supported: " + JSON.stringify(definition));
     }
@@ -192,6 +197,15 @@ function convertArithmeticMeasureDefinition(
         arithmeticMeasure: {
             measureIdentifiers: arithmeticMeasure.measureIdentifiers.map(toLocalIdentifier),
             operator: convertArithmeticMeasureOperator(arithmeticMeasure.operator),
+        },
+    };
+}
+
+function convertConstantMeasureDefinition(definition: IConstantMeasureDefinition): ConstantMeasureDefinition {
+    const { constantMeasure } = definition;
+    return {
+        constantMeasure: {
+            value: constantMeasure.value,
         },
     };
 }

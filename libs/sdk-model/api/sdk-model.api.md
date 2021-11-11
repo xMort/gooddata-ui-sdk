@@ -205,6 +205,22 @@ export enum ComputeRatioRule {
 }
 
 // @public
+export class ConstantMeasureBuilder extends MeasureBuilderBase<IConstantMeasureDefinition> {
+    // @internal
+    constructor(input: ConstantMeasureBuilderInput);
+    // (undocumented)
+    protected buildDefinition(): IConstantMeasureDefinition;
+    // (undocumented)
+    protected generateLocalId(): string;
+    value: (value: number) => this;
+}
+
+// @public
+export type ConstantMeasureBuilderInput = {
+    value: number;
+} | IMeasure<IConstantMeasureDefinition>;
+
+// @public
 export type DateAttributeGranularity = "GDC.time.year" | "GDC.time.week_us" | "GDC.time.week_in_year" | "GDC.time.week_in_quarter" | "GDC.time.week" | "GDC.time.euweek_in_year" | "GDC.time.euweek_in_quarter" | "GDC.time.quarter" | "GDC.time.quarter_in_year" | "GDC.time.month" | "GDC.time.month_in_quarter" | "GDC.time.month_in_year" | "GDC.time.day_in_year" | "GDC.time.day_in_quarter" | "GDC.time.day_in_month" | "GDC.time.day_in_week" | "GDC.time.day_in_euweek" | "GDC.time.date" | "GDC.time.hour" | "GDC.time.hour_in_day" | "GDC.time.minute" | "GDC.time.minute_in_hour";
 
 // @public
@@ -445,6 +461,14 @@ export interface IComparisonCondition {
 }
 
 // @public
+export interface IConstantMeasureDefinition {
+    // (undocumented)
+    constantMeasure: {
+        value: number;
+    };
+}
+
+// @public
 export type IDateFilter = IRelativeDateFilter | IAbsoluteDateFilter;
 
 // @public
@@ -545,7 +569,7 @@ export interface IMeasureDefinition {
 }
 
 // @public
-export type IMeasureDefinitionType = IMeasureDefinition | IArithmeticMeasureDefinition | IPoPMeasureDefinition | IPreviousPeriodMeasureDefinition;
+export type IMeasureDefinitionType = IMeasureDefinition | IArithmeticMeasureDefinition | IPoPMeasureDefinition | IPreviousPeriodMeasureDefinition | IConstantMeasureDefinition;
 
 // @public
 export type IMeasureFilter = IAbsoluteDateFilter | IRelativeDateFilter | IPositiveAttributeFilter | INegativeAttributeFilter;
@@ -900,6 +924,12 @@ export function isComparisonCondition(obj: unknown): obj is IComparisonCondition
 export function isComparisonConditionOperator(obj: unknown): obj is ComparisonConditionOperator;
 
 // @public
+export function isConstantMeasure(obj: unknown): obj is IMeasure<IConstantMeasureDefinition>;
+
+// @public
+export function isConstantMeasureDefinition(obj: unknown): obj is IConstantMeasureDefinition;
+
+// @public
 export function isDateFilter(obj: unknown): obj is IDateFilter;
 
 // @public
@@ -1091,6 +1121,12 @@ export abstract class MeasureBuilderBase<T extends IMeasureDefinitionType> {
 }
 
 // @public
+export function measureConstantValue(measure: IMeasure<IConstantMeasureDefinition>): number;
+
+// @public
+export function measureConstantValue(measure: IMeasure): number | undefined;
+
+// @public
 export function measureDoesComputeRatio(measure: IMeasure): measure is IMeasure<IMeasureDefinition>;
 
 // @public
@@ -1213,6 +1249,9 @@ export function newAttributeSort(attributeOrId: IAttribute | string, sortDirecti
 
 // @public
 export function newBucket(localId: string, ...content: Array<IAttributeOrMeasure | ITotal | undefined>): IBucket;
+
+// @public
+export function newConstantMeasure(value: number, modifications?: MeasureModifications<ConstantMeasureBuilder>): IMeasure<IConstantMeasureDefinition>;
 
 // @public
 export function newDefForBuckets(workspace: string, buckets: IBucket[], filters?: INullableFilter[]): IExecutionDefinition;

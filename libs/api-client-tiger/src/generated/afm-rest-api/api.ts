@@ -267,6 +267,33 @@ export interface ArithmeticMeasureDefinition {
     arithmeticMeasure: ArithmeticMeasureDefinitionArithmeticMeasure;
 }
 /**
+ * Measure representing a constant value.
+ * @export
+ * @interface ConstantMeasureDefinition
+ */
+export interface ConstantMeasureDefinition {
+    /**
+     *
+     * @type {ConstantMeasureDefinitionConstantMeasure}
+     * @memberof ConstantMeasureDefinition
+     */
+    constantMeasure: ConstantMeasureDefinitionConstantMeasure;
+}
+/**
+ *
+ * @export
+ * @interface ConstantMeasureDefinitionConstantMeasure
+ */
+export interface ConstantMeasureDefinitionConstantMeasure {
+    /**
+     * Measure constant value
+     * @type {number}
+     * @memberof ConstantMeasureDefinitionConstantMeasure
+     */
+    value: number;
+}
+
+/**
  *
  * @export
  * @interface ArithmeticMeasureDefinitionArithmeticMeasure
@@ -1155,7 +1182,9 @@ export type MeasureDefinition =
     | InlineMeasureDefinition
     | PopDatasetMeasureDefinition
     | PopDateMeasureDefinition
+    | ConstantMeasureDefinition
     | SimpleMeasureDefinition;
+
 /**
  *
  * @export

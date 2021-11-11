@@ -32,6 +32,7 @@ import {
     isMeasure,
     measurePopAttribute,
     modifyPopMeasure,
+    isConstantMeasure,
 } from "@gooddata/sdk-model";
 import {
     convertItemType,
@@ -254,6 +255,8 @@ function filterItemsForAvailabilityQuery(items: IAttributeOrMeasure[]): IAttribu
         if (isAttribute(item) || isSimpleMeasure(item)) {
             return true;
         } else if (isArithmeticMeasure(item)) {
+            return false;
+        } else if (isConstantMeasure(item)) {
             return false;
         } else if (isPoPMeasure(item) || isPreviousPeriodMeasure(item)) {
             const masterMeasure = measureMasterIdentifier(item);
