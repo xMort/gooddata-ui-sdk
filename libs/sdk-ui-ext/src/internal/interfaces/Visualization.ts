@@ -194,7 +194,7 @@ export interface IBucketItem {
     locationDisplayFormRef?: ObjRef;
     dateDatasetRef?: ObjRef;
     displayForms?: IDisplayForm[];
-    title?: string;
+    alias?: string;
 }
 
 export interface IFiltersBucketItem extends IBucketItem {
@@ -373,6 +373,7 @@ export interface IVisualization {
     getExtendedReferencePoint(
         referencePoint: IReferencePoint,
         previousReferencePoint?: IReferencePoint,
+        onNewDerivedBucketItemsPlaced?: (referencePoint: IReferencePoint) => void,
     ): Promise<IExtendedReferencePoint>;
 
     /**

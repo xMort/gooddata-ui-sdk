@@ -6,7 +6,7 @@ import cx from "classnames";
 import { HeadlineElementType } from "@gooddata/sdk-ui";
 import { IChartConfig } from "../../../interfaces";
 import { IFormattedHeadlineDataItem, IHeadlineData, IHeadlineDataItem } from "../Headlines";
-import { formatItemValue, formatPercentageValue } from "./utils/HeadlineDataItemUtils";
+import { formatItemValue } from "./utils/HeadlineDataItemUtils";
 import { Identifier } from "@gooddata/sdk-model";
 import noop from "lodash/noop";
 import {
@@ -86,7 +86,7 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         ]);
     }
 
-    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem, isTertiraryVisible: boolean) {
+    private getSecondaryItemClasses(secondaryItem: IHeadlineDataItem, isTertiaryVisible: boolean) {
         return cx(
             [
                 "gd-flex-item",
@@ -96,7 +96,7 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
                 ...this.getDrillableClasses(secondaryItem.isDrillable),
             ],
             {
-                "with-border": isTertiraryVisible,
+                "with-border": isTertiaryVisible,
             },
         );
     }
@@ -149,7 +149,7 @@ export default class Headline extends React.Component<IHeadlineVisualizationProp
         if (!tertiaryItem) {
             return;
         }
-        const formattedItem = formatPercentageValue(tertiaryItem);
+        const formattedItem = formatItemValue(tertiaryItem);
 
         return (
             <div className="gd-flex-item headline-compare-section-item headline-tertiary-item s-headline-tertiary-item">

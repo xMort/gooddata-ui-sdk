@@ -63,7 +63,7 @@ export interface IBaseVisualizationProps extends IVisCallbacks {
     theme?: ITheme;
     onExtendedReferencePointChanged?(): void;
 
-    onNewDerivedBucketItemsPlaced?(): void;
+    onNewDerivedBucketItemsPlaced?(referencePoint: IReferencePoint): void;
 
     renderer?(component: any, target: Element): void;
 }
@@ -254,11 +254,19 @@ export class BaseVisualization extends React.PureComponent<IBaseVisualizationPro
         newProps: IBaseVisualizationProps,
         currentProps?: IBaseVisualizationProps,
     ) {
-        const { referencePoint: newReferencePoint, onExtendedReferencePointChanged } = newProps;
+        const {
+            referencePoint: newReferencePoint,
+            onExtendedReferencePointChanged,
+            onNewDerivedBucketItemsPlaced,
+        } = newProps;
 
         if (this.visualization && newReferencePoint && onExtendedReferencePointChanged) {
             this.visualization
-                .getExtendedReferencePoint(newReferencePoint, currentProps && currentProps.referencePoint)
+                .getExtendedReferencePoint(
+                    newReferencePoint,
+                    currentProps && currentProps.referencePoint,
+                    onNewDerivedBucketItemsPlaced,
+                )
                 .then(onExtendedReferencePointChanged);
         }
     }
