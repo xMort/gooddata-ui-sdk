@@ -7,7 +7,7 @@ import set from "lodash/set";
 import { IInsight, IInsightDefinition, newAttributeSort } from "@gooddata/sdk-model";
 
 import { AXIS, AXIS_NAME } from "../../../constants/axis";
-import { ATTRIBUTE, BUCKETS, DATE } from "../../../constants/bucket";
+import { ATTRIBUTE, BUCKETS, DATE, METRIC } from "../../../constants/bucket";
 import { LINE_CHART_SUPPORTED_PROPERTIES } from "../../../constants/supportedProperties";
 import { DEFAULT_LINE_UICONFIG, LINE_UICONFIG_WITH_MULTIPLE_DATES } from "../../../constants/uiConfig";
 import {
@@ -18,6 +18,8 @@ import {
     IVisConstruct,
     IUiConfig,
     IDrillDownDefinition,
+    IVisProps,
+    IVisualizationProperties,
 } from "../../../interfaces/Visualization";
 import { configureOverTimeComparison, configurePercent } from "../../../utils/bucketConfig";
 import {
@@ -32,12 +34,13 @@ import {
     isDateBucketItem,
     sanitizeFilters,
     getBucketItems,
+    getItemsFromBuckets,
 } from "../../../utils/bucketHelper";
 import {
     getReferencePointWithSupportedProperties,
     setSecondaryMeasures,
 } from "../../../utils/propertiesHelper";
-import { removeSort, getCustomSortDisabledExplanation } from "../../../utils/sort";
+import { removeSort, getCustomSortDisabledExplanation, createSorts } from "../../../utils/sort";
 import { setLineChartUiConfig } from "../../../utils/uiConfigHelpers/lineChartUiConfigHelper";
 import LineChartBasedConfigurationPanel from "../../configurationPanels/LineChartBasedConfigurationPanel";
 import { PluggableBaseChart } from "../baseChart/PluggableBaseChart";
@@ -47,6 +50,7 @@ import {
     reverseAndTrimIntersection,
 } from "../drillDownUtil";
 import { ISortConfig, newAvailableSortsGroup } from "../../../interfaces/SortConfig";
+import { IExecutionFactory } from "@gooddata/sdk-backend-spi";
 
 /**
  * PluggableLineChart
@@ -166,6 +170,26 @@ export class PluggableLineChart extends PluggableBaseChart {
         });
     }
 
+    public getExecution(
+        options: IVisProps,
+        insight: IInsightDefinition,
+        executionFactory: IExecutionFactory,
+    ) {
+        const { dateFormat, executionConfig } = options;
+        const supportedControls: IVisualizationProperties = super.getSupportedControls(insight, options);
+
+        return executionFactory
+            .forBuckets(
+                insight.insight.buckets.filter(
+                    (bucket) => bucket.localIdentifier !== BucketNames.REFERENCE_LINE,
+                ),
+            )
+            .withDimensions(...this.getDimensions(insight))
+            .withSorting(...createSorts(this.type, insight, supportedControls, this.featureFlags))
+            .withDateFormat(dateFormat)
+            .withExecConfig(executionConfig);
+    }
+
     protected configureBuckets(newReferencePoint: IExtendedReferencePoint): void {
         if (this.isMultipleDatesEnabled()) {
             this.configureBucketsWithMultipleDates(newReferencePoint);
@@ -218,6 +242,10 @@ export class PluggableLineChart extends PluggableBaseChart {
             {
                 localIdentifier: BucketNames.SEGMENT,
                 items: stacks,
+            },
+            {
+                localIdentifier: BucketNames.REFERENCE_LINE,
+                items: [],
             },
         ]);
     }
@@ -279,6 +307,8 @@ export class PluggableLineChart extends PluggableBaseChart {
             attributes = getAttributeItemsWithoutStacks(buckets, [ATTRIBUTE, DATE]).slice(0, 1);
         }
 
+        const referenceLineMeasure = getItemsFromBuckets(buckets, [BucketNames.REFERENCE_LINE], [METRIC]);
+
         set(newReferencePoint, BUCKETS, [
             {
                 localIdentifier: BucketNames.MEASURES,
@@ -291,6 +321,10 @@ export class PluggableLineChart extends PluggableBaseChart {
             {
                 localIdentifier: BucketNames.SEGMENT,
                 items: stacks,
+            },
+            {
+                localIdentifier: BucketNames.REFERENCE_LINE,
+                items: referenceLineMeasure,
             },
         ]);
     }

@@ -1,4 +1,4 @@
-// (C) 2007-2020 GoodData Corporation
+// (C) 2007-2022 GoodData Corporation
 const MEASURES = "measures";
 const SECONDARY_MEASURES = "secondary_measures";
 const TERTIARY_MEASURES = "tertiary_measures";
@@ -13,6 +13,7 @@ const LOCATION = "location";
 const SIZE = "size";
 const COLOR = "color";
 const TOOLTIP_TEXT = "tooltipText";
+const REFERENCE_LINE = "reference_line";
 
 /**
  * Standard bucket names used in the different visualizations.
@@ -33,4 +34,5 @@ export const BucketNames = {
     SIZE,
     COLOR,
     TOOLTIP_TEXT,
+    REFERENCE_LINE,
 };

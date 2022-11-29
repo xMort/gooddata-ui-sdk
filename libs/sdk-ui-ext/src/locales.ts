@@ -26,6 +26,7 @@ export const titles = defineMessages({
     secondary_measures_bullet: { id: "dashboard.bucket.secondary_measures_title.bullet" },
     tertiary_measures_bubble: { id: "dashboard.bucket.tertiary_measures_title.bubble" },
     tertiary_measures_bullet: { id: "dashboard.bucket.tertiary_measures_title.bullet" },
+    reference_line_line: { id: "dashboard.bucket.reference_line_title" },
     attribute_scatter: { id: "dashboard.bucket.attribute_title.scatter" },
     attribute_xirr: { id: "dashboard.bucket.attribute_title.xirr" },
     attribute_table: { id: "dashboard.bucket.attribute_title.table" },

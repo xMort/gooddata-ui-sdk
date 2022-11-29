@@ -1,4 +1,4 @@
-// (C) 2019-2021 GoodData Corporation
+// (C) 2019-2022 GoodData Corporation
 import { IUiConfig } from "../interfaces/Visualization";
 
 import { METRIC, FACT, ATTRIBUTE, DATE, GEO_ATTRIBUTE } from "./bucket";
@@ -244,6 +244,12 @@ export const DEFAULT_LINE_UICONFIG: IUiConfig = {
         segment: {
             ...stackBase,
         },
+        reference_line: {
+            ...measuresBase,
+            itemsLimit: 1,
+            isShowInPercentVisible: false,
+            allowsReordering: false,
+        },
         ...defaultFilters,
     },
     ...defaultRootUiConfigProperties,
@@ -270,6 +276,12 @@ export const LINE_UICONFIG_WITH_MULTIPLE_DATES: IUiConfig = {
                 date: 1,
             },
             allowsDuplicateDates: true,
+        },
+        reference_line: {
+            ...measuresBase,
+            itemsLimit: 1,
+            isShowInPercentVisible: false,
+            allowsReordering: false,
         },
         ...defaultFilters,
     },

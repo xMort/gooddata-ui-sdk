@@ -349,6 +349,11 @@
         "comment": "",
         "limit": 0
     },
+    "dashboard.bucket.reference_line_title": {
+        "value": "Reference line",
+        "comment": "",
+        "limit": 0
+    },
     "dashboard.bucket.trend_title.line": {
         "value": "Trend by",
         "comment": "",

@@ -130,6 +130,7 @@ export const BucketNames: {
     SIZE: string;
     COLOR: string;
     TOOLTIP_TEXT: string;
+    REFERENCE_LINE: string;
 };
 
 // @internal (undocumented)

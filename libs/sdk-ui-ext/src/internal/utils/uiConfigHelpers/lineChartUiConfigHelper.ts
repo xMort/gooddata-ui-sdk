@@ -24,6 +24,7 @@ import { messages } from "../../../locales";
 const lineMeasuresIcon = "local:line/bucket-title-measures.svg";
 const lineTrendIcon = "local:line/bucket-title-trend.svg";
 const lineSegmentIcon = "local:line/bucket-title-segment.svg";
+const lineReferenceLineIcon = "local:line/bucket-title-segment.svg";
 
 function setLineChartBucketWarningMessages(referencePoint: IExtendedReferencePoint, intl?: IntlShape) {
     const buckets = referencePoint?.buckets || [];
@@ -74,6 +75,11 @@ export function setLineChartUiConfig(
         [UICONFIG, BUCKETS, BucketNames.MEASURES, "canAddItems"],
         measuresCanAddItems,
     );
+    set(
+        referencePointConfigured,
+        [UICONFIG, BUCKETS, BucketNames.REFERENCE_LINE, "canAddItems"],
+        measuresCanAddItems,
+    );
     set(referencePointConfigured, [UICONFIG, BUCKETS, BucketNames.TREND, "canAddItems"], true);
     set(
         referencePointConfigured,
@@ -94,6 +100,11 @@ export function setLineChartUiConfig(
     set(referencePointConfigured, [UICONFIG, BUCKETS, BucketNames.MEASURES, "icon"], lineMeasuresIcon);
     set(referencePointConfigured, [UICONFIG, BUCKETS, BucketNames.TREND, "icon"], lineTrendIcon);
     set(referencePointConfigured, [UICONFIG, BUCKETS, BucketNames.SEGMENT, "icon"], lineSegmentIcon);
+    set(
+        referencePointConfigured,
+        [UICONFIG, BUCKETS, BucketNames.REFERENCE_LINE, "icon"],
+        lineReferenceLineIcon,
+    );
 
     return referencePointConfigured;
 }

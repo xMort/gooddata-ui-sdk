@@ -407,7 +407,7 @@ export class PluggableBaseChart extends AbstractPluggableVisualization {
         };
     }
 
-    private getSupportedControls(insight: IInsightDefinition, options: IVisProps) {
+    protected getSupportedControls(insight: IInsightDefinition, options: IVisProps) {
         const defaultControls = getSupportedPropertiesControls(
             this.defaultControlsProperties,
             this.supportedPropertiesList,
