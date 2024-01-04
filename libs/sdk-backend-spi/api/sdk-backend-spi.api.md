@@ -356,6 +356,7 @@ export type IDateFilterConfigsQueryResult = IPagedResource<IDateFilterConfig>;
 export interface IElementsQuery extends ICancelable<IElementsQuery> {
     query(): Promise<IElementsQueryResult>;
     withAttributeFilters(filters: IElementsQueryAttributeFilter[]): IElementsQuery;
+    withAvailableElementsOnly(validateBy: ObjRef[]): IElementsQuery;
     withDateFilters(filters: IRelativeDateFilter[]): IElementsQuery;
     withLimit(limit: number): IElementsQuery;
     withMeasures(measures: IMeasure[]): IElementsQuery;
