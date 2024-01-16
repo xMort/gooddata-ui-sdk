@@ -1,4 +1,4 @@
-// (C) 2021-2023 GoodData Corporation
+// (C) 2021-2024 GoodData Corporation
 import {
     IColorPalette,
     IDateFilterConfig,
@@ -626,5 +626,17 @@ export const selectEnableKDCrossFiltering: DashboardSelector<boolean> = createSe
     selectConfig,
     (state) => {
         return state.settings?.enableKDCrossFiltering ?? false;
+    },
+);
+
+/**
+ * Returns whether KD attribute filter values validation/filtering is enabled.
+ *
+ * @internal
+ */
+export const selectEnableAttributeFilterValuesValidation: DashboardSelector<boolean> = createSelector(
+    selectConfig,
+    (state) => {
+        return state.settings?.enableAttributeFilterValuesValidation ?? false;
     },
 );

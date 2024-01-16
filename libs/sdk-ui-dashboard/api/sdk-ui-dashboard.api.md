@@ -269,6 +269,7 @@ import { SagaIterator } from 'redux-saga';
 import { ScreenSize } from '@gooddata/sdk-model';
 import { Selector } from '@reduxjs/toolkit';
 import { SetCatalogItemsPayload } from './catalogReducers.js';
+import { SetCatalogMeasuresAndFactsPayload } from './catalogReducers.js';
 import { ShareStatus } from '@gooddata/sdk-model';
 import { TypedUseSelectorHook } from 'react-redux';
 import { UiState as UiState_2 } from './uiState.js';
@@ -549,6 +550,10 @@ export function cancelEditRenderMode(correlationId?: string): ChangeRenderMode;
 export const catalogActions: CaseReducerActions<    {
 setCatalogItems: (state: WritableDraft<CatalogState_2>, action: {
 payload: SetCatalogItemsPayload;
+type: string;
+}) => void | CatalogState_2 | WritableDraft<CatalogState_2>;
+setCatalogMeasuresAndFacts: (state: WritableDraft<CatalogState_2>, action: {
+payload: SetCatalogMeasuresAndFactsPayload;
 type: string;
 }) => void | CatalogState_2 | WritableDraft<CatalogState_2>;
 addAttributeHierarchy: (state: WritableDraft<CatalogState_2>, action: {
@@ -1030,9 +1035,6 @@ export type CustomCreatePanelItemComponent = ComponentType<ICreatePanelItemCompo
 
 // @public (undocumented)
 export type CustomDashboardAttributeFilterComponent = ComponentType<IDashboardAttributeFilterProps>;
-
-// @internal (undocumented)
-export type CustomDashboardAttributeFilterPlaceholderComponent = ComponentType<IDashboardAttributeFilterPlaceholderProps>;
 
 // @alpha (undocumented)
 export type CustomDashboardContentComponent = ComponentType<IDashboardContentBaseProps>;
@@ -8211,6 +8213,9 @@ export function useWidgetFilters(widget: ExtendedDashboardWidget | undefined, in
 
 // @internal (undocumented)
 export function useWidgetSelection(widgetRef?: ObjRef): IUseWidgetSelectionResult;
+
+// @internal (undocumented)
+export type ValuesLimitingItem = IDashboardAttributeFilterParentItem | ObjRef;
 
 // @public (undocumented)
 export type WidgetComponentProvider = (widget: ExtendedDashboardWidget) => CustomDashboardWidgetComponent;

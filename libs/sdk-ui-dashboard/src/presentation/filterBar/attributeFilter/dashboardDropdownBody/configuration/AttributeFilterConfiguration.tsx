@@ -1,4 +1,4 @@
-// (C) 2022-2023 GoodData Corporation
+// (C) 2022-2024 GoodData Corporation
 import React, { useCallback, useEffect, useMemo } from "react";
 import { IntlShape } from "react-intl";
 import {
@@ -29,7 +29,9 @@ import { useAttributes } from "../../../../../_staging/sharedHooks/useAttributes
 import { AttributeTitleRenaming } from "../../../configuration/title/AttributeTitleRenaming.js";
 import { SelectionMode } from "./selectionMode/SelectionMode.js";
 import { ConfigModeSelect } from "../../../configuration/ConfigurationModeSelect.js";
+
 import { useValidNeighbourAttributes } from "./hooks/useValidNeighbourAttributes.js";
+import { LocalizedLimitValuesConfiguration } from "./limitValues/LimitValuesConfiguration.js";
 
 interface IAttributeFilterConfigurationProps {
     closeHandler: () => void;
@@ -46,6 +48,7 @@ interface IAttributeFilterConfigurationProps {
     intl: IntlShape;
     modeCategoryTitleText: string;
     showConfigModeSection: boolean;
+    validateElementsBy?: ObjRef[];
 }
 
 export const AttributeFilterConfiguration: React.FC<IAttributeFilterConfigurationProps> = (props) => {
@@ -64,6 +67,7 @@ export const AttributeFilterConfiguration: React.FC<IAttributeFilterConfiguratio
         intl,
         modeCategoryTitleText,
         showConfigModeSection,
+        validateElementsBy,
     } = props;
     const theme = useTheme();
 
@@ -174,6 +178,11 @@ export const AttributeFilterConfiguration: React.FC<IAttributeFilterConfiguratio
                 selectionMode={selectionMode}
                 onSelectionModeChange={onSelectionModeUpdate}
                 disabled={getIsSelectionDisabled()}
+            />
+            <LocalizedLimitValuesConfiguration
+                parentFilters={parents}
+                validateElementsBy={validateElementsBy}
+                intl={intl}
             />
             {showDependentFiltersConfiguration && parents.length > 0 ? (
                 <ConfigurationCategory categoryTitle={filterByText} />

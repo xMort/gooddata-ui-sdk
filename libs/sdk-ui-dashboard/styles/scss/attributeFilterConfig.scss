@@ -159,3 +159,74 @@
         }
     }
 }
+
+.attribute-filter__limit__title {
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+        display: flex;
+        align-items: center;
+        flex: 1 0;
+        gap: 5px;
+    }
+
+    .gd-icon-circle-question {
+        color: kit-variables.$default-gd-color-disabled;
+    }
+}
+
+.attribute-filter__limit__add-button {
+    .gd-button-icon::before {
+        line-height: 24px;
+    }
+}
+
+.attribute-filter__limit__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 3px 10px;
+    font-size: 12px;
+}
+
+.attribute-filter__limit__item__title {
+    display: flex;
+    align-items: center;
+    color: kit-variables.$default-gd-color-text;
+
+    &.type-metric::before {
+        margin-top: -3px;
+    }
+}
+
+.attribute-filter__limit__item__title--aggregated {
+    color: kit-variables.$default-gd-color-disabled;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.attribute-filter__limit__item--disabled {
+    color: kit-variables.$default-gd-color-disabled;
+}
+
+// remove line drawn across the dropdown content, made by attribute filter styles
+// targeting every :after in the dropdown, the ones below should not have the line
+.attribute-filter-dropdown-configuration {
+    .configuration-category.attribute-filter__limit__title {
+        h3::after {
+            width: 0;
+        }
+
+        .gd-button-small::after {
+            width: 0;
+        }
+
+        .gd-button-icon::after,
+        .gd-button-text::after {
+            width: 0;
+        }
+    }
+}

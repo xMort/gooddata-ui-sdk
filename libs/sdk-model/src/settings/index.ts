@@ -1,4 +1,4 @@
-// (C) 2020-2023 GoodData Corporation
+// (C) 2020-2024 GoodData Corporation
 
 /**
  * Settings are obtained from backend and are effectively a collection of feature flags or settings with
@@ -329,10 +329,17 @@ export interface ISettings {
      * Enable cross filtering in KD
      */
     enableKDCrossFiltering?: boolean;
+
     /**
      * Enable multiple date filters.
      */
     enableMultipleDateFilters?: boolean;
+
+    /**
+     * Enable attribute filter values validation by metric, attribute, fact.
+     * The configuration of filter values validation is merged with parent filters UI.
+     */
+    enableAttributeFilterValuesValidation?: boolean;
 
     [key: string]: number | boolean | string | object | undefined;
 }

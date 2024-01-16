@@ -1,7 +1,8 @@
 // (C) 2021-2024 GoodData Corporation
-import { DashboardContext } from "../../../types/commonTypes.js";
 import { IWorkspaceCatalog, IWorkspaceCatalogFactoryOptions } from "@gooddata/sdk-backend-spi";
 import { DateAttributeGranularity, idRef, CatalogItemType } from "@gooddata/sdk-model";
+
+import { DashboardContext } from "../../../types/commonTypes.js";
 import { InitializeDashboard } from "../../../commands/index.js";
 
 const SupportedCatalogGranularity: DateAttributeGranularity[] = [
@@ -16,11 +17,15 @@ const SupportedCatalogGranularity: DateAttributeGranularity[] = [
     "GDC.time.quarter_in_year",
 ];
 
+function shouldLoadMetrics(ctx: DashboardContext, cmd: InitializeDashboard) {
+    return ctx.backend.capabilities.supportsKpiWidget || cmd.payload.config?.initialRenderMode === "edit";
+}
+
 export function loadCatalog(ctx: DashboardContext, cmd: InitializeDashboard): Promise<IWorkspaceCatalog> {
     const { backend, workspace } = ctx;
     const availability = cmd.payload.config?.objectAvailability;
 
-    const metricTypes: CatalogItemType[] = backend.capabilities.supportsKpiWidget ? ["fact", "measure"] : [];
+    const metricTypes: CatalogItemType[] = shouldLoadMetrics(ctx, cmd) ? ["fact", "measure"] : [];
     const options: IWorkspaceCatalogFactoryOptions = {
         excludeTags: (availability?.excludeObjectsWithTags ?? []).map((tag) => idRef(tag)),
         includeTags: (availability?.includeObjectsWithTags ?? []).map((tag) => idRef(tag)),

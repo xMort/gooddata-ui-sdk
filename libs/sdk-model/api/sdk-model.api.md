@@ -2454,6 +2454,7 @@ export interface ISettings {
     enableAlternativeDisplayFormSelection?: boolean;
     enableAnalyticalDashboardPermissions?: boolean;
     enableApproxCount?: boolean;
+    enableAttributeFilterValuesValidation?: boolean;
     enableAttributeHierarchies?: boolean;
     enableAxisLabelFormat?: boolean;
     enableAxisNameConfiguration?: boolean;

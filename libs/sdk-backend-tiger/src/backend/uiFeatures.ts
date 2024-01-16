@@ -66,6 +66,7 @@ export enum TigerFeaturesNames {
     //boolean + possible values: enabled, disabled
     EnableKDCrossFiltering = "enableKDCrossFiltering",
     EnableMultipleDateFilters = "enableMultipleDateFilters",
+    EnableAttributeFilterValuesValidation = "enableAttributeFilterValuesValidation",
 }
 
 export type ITigerFeatureFlags = {
@@ -99,6 +100,7 @@ export type ITigerFeatureFlags = {
     enableCsvAnalytics: typeof FeatureFlagsValues["enableCsvAnalytics"][number];
     enableKDCrossFiltering: typeof FeatureFlagsValues["enableKDCrossFiltering"][number];
     enableMultipleDateFilters: typeof FeatureFlagsValues["enableMultipleDateFilters"][number];
+    enableAttributeFilterValuesValidation: typeof FeatureFlagsValues["enableAttributeFilterValuesValidation"][number];
 };
 
 export const DefaultFeatureFlags: ITigerFeatureFlags = {
@@ -132,6 +134,7 @@ export const DefaultFeatureFlags: ITigerFeatureFlags = {
     enableCsvAnalytics: false,
     enableKDCrossFiltering: true,
     enableMultipleDateFilters: false,
+    enableAttributeFilterValuesValidation: false,
 };
 
 export const FeatureFlagsValues = {
@@ -169,4 +172,5 @@ export const FeatureFlagsValues = {
     enableCsvAnalytics: [true, false] as const,
     enableKDCrossFiltering: [true, false] as const,
     enableMultipleDateFilters: [true, false] as const,
+    enableAttributeFilterValuesValidation: [true, false] as const,
 };
