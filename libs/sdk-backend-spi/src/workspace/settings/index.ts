@@ -1,4 +1,4 @@
-// (C) 2019-2022 GoodData Corporation
+// (C) 2019-2024 GoodData Corporation
 import { IWorkspaceSettings, IUserWorkspaceSettings } from "../../common/settings.js";
 
 /**
@@ -40,6 +40,13 @@ export interface IWorkspaceSettingsService {
     setColorPalette(colorPaletteId: string): Promise<void>;
 
     /**
+     * Deletes color palette from workspace settings returning chart colors to default.
+     *
+     * @returns promise
+     */
+    deleteColorPalette(): Promise<void>;
+
+    /**
      * Sets theme for current workspace.
      *
      * @param themeId - ID of the theme to apply to the current workspace.
@@ -47,4 +54,11 @@ export interface IWorkspaceSettingsService {
      * @returns promise
      */
     setTheme(themeId: string): Promise<void>;
+
+    /**
+     * Deletes theme from workspace settings returning workspace styling to default.
+     *
+     * @returns promise
+     */
+    deleteTheme(): Promise<void>;
 }

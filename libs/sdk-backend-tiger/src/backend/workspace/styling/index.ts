@@ -1,21 +1,31 @@
 // (C) 2019-2024 GoodData Corporation
 import { IWorkspaceStylingService } from "@gooddata/sdk-backend-spi";
-import { ApiEntitlementNameEnum } from "@gooddata/api-client-tiger";
+import { ApiEntitlementNameEnum, MetadataUtilities } from "@gooddata/api-client-tiger";
 import {
     IColorPaletteItem,
     IColorPaletteMetadataObject,
     ITheme,
     IThemeMetadataObject,
+    ObjRef,
+    idRef,
 } from "@gooddata/sdk-model";
 
 import { TigerAuthenticatedCallGuard } from "../../../types/index.js";
-import { getSettingsForCurrentUser } from "../settings/index.js";
+import { getSettingsForCurrentUser, TigerWorkspaceSettings } from "../settings/index.js";
+import { unwrapColorPaletteContent } from "../../../convertors/fromBackend/ColorPaletteConverter.js";
+import { convertThemeWithLinks } from "../../../convertors/fromBackend/ThemeConverter.js";
+import { JsonApiId } from "../../../convertors/fromBackend/ObjRefConverter.js";
+import { objRefToIdentifier } from "../../../utils/api.js";
+
 import { DefaultColorPalette } from "./mocks/colorPalette.js";
 import { DefaultTheme } from "./mocks/theme.js";
-import { unwrapColorPaletteContent } from "../../../convertors/fromBackend/ColorPaletteConverter.js";
 
 export class TigerWorkspaceStyling implements IWorkspaceStylingService {
-    constructor(private readonly authCall: TigerAuthenticatedCallGuard, public readonly workspace: string) {}
+    private settingsService: TigerWorkspaceSettings;
+
+    constructor(private readonly authCall: TigerAuthenticatedCallGuard, public readonly workspace: string) {
+        this.settingsService = new TigerWorkspaceSettings(authCall, workspace);
+    }
 
     /**
      * Checks if Theming needs to be loaded.
@@ -87,4 +97,42 @@ export class TigerWorkspaceStyling implements IWorkspaceStylingService {
               )
             : DefaultTheme;
     };
+
+    public async getThemes(): Promise<IThemeMetadataObject[]> {
+        return await this.authCall((client) =>
+            MetadataUtilities.getAllPagesOf(client, client.entities.getAllEntitiesThemes, {
+                sort: ["name"],
+            })
+                .then(MetadataUtilities.mergeEntitiesResults)
+                .then((themes) => themes.data.map(convertThemeWithLinks)),
+        );
+    }
+
+    private async getActiveSetting(setting: string): Promise<ObjRef | undefined> {
+        const settings = await this.settingsService.getSettings();
+        const foundSetting = settings?.[setting] as JsonApiId;
+        return foundSetting?.id ? idRef(foundSetting.id) : undefined;
+    }
+
+    public getActiveTheme = () => this.getActiveSetting("activeTheme");
+
+    public async setActiveTheme(themeRef: ObjRef): Promise<void> {
+        const themeId = await objRefToIdentifier(themeRef, this.authCall);
+        await this.settingsService.setTheme(themeId);
+    }
+
+    public async clearActiveTheme(): Promise<void> {
+        await this.settingsService.deleteTheme();
+    }
+
+    public getActiveColorPalette = () => this.getActiveSetting("activeColorPalette");
+
+    public async setActiveColorPalette(colorPaletteRef: ObjRef): Promise<void> {
+        const colorPaletteId = await objRefToIdentifier(colorPaletteRef, this.authCall);
+        await this.settingsService.setColorPalette(colorPaletteId);
+    }
+
+    public async clearActiveColorPalette(): Promise<void> {
+        await this.settingsService.deleteColorPalette();
+    }
 }

@@ -48,8 +48,16 @@ export class TigerWorkspaceSettings
         return this.setSetting("ACTIVE_THEME", { id: activeThemeId, type: "theme" });
     }
 
+    public async deleteTheme() {
+        return this.deleteSettingByType("ACTIVE_THEME");
+    }
+
     public async setColorPalette(activeColorPaletteId: string): Promise<void> {
         return this.setSetting("ACTIVE_COLOR_PALETTE", { id: activeColorPaletteId, type: "colorPalette" });
+    }
+
+    public async deleteColorPalette() {
+        return this.deleteSettingByType("ACTIVE_COLOR_PALETTE");
     }
 
     public getSettingsForCurrentUser(): Promise<IUserWorkspaceSettings> {

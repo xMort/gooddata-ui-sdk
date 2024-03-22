@@ -53,6 +53,7 @@ import {
     IThemeMetadataObject,
     IColorPaletteMetadataObject,
     IColorPaletteDefinition,
+    ObjRef,
 } from "@gooddata/sdk-model";
 import { RecordedExecutionFactory } from "./execution.js";
 import { RecordedBackendConfig, RecordingIndex } from "./types.js";
@@ -224,13 +225,37 @@ function recordedWorkspace(
                 async setColorPalette(): Promise<void> {
                     return Promise.resolve();
                 },
+                async deleteColorPalette(): Promise<void> {
+                    return Promise.resolve();
+                },
                 async setTheme(): Promise<void> {
+                    return Promise.resolve();
+                },
+                async deleteTheme(): Promise<void> {
                     return Promise.resolve();
                 },
             };
         },
         styling(): IWorkspaceStylingService {
             return {
+                clearActiveColorPalette(): Promise<void> {
+                    return Promise.resolve(undefined);
+                },
+                clearActiveTheme(): Promise<void> {
+                    return Promise.resolve(undefined);
+                },
+                getActiveColorPalette(): Promise<ObjRef | undefined> {
+                    return Promise.resolve(undefined);
+                },
+                getActiveTheme(): Promise<ObjRef | undefined> {
+                    return Promise.resolve(undefined);
+                },
+                setActiveColorPalette(): Promise<void> {
+                    return Promise.resolve(undefined);
+                },
+                setActiveTheme(): Promise<void> {
+                    return Promise.resolve(undefined);
+                },
                 async getColorPalette(): Promise<IColorPalette> {
                     return implConfig.globalPalette ?? [];
                 },

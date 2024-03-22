@@ -1,4 +1,4 @@
-// (C) 2021-2022 GoodData Corporation
+// (C) 2021-2024 GoodData Corporation
 import {
     IUserWorkspaceSettings,
     IWorkspaceSettings,
@@ -27,7 +27,15 @@ export abstract class DecoratedWorkspaceSettingsService implements IWorkspaceSet
         return this.decorated.setTheme(themeId);
     }
 
+    async deleteTheme(): Promise<void> {
+        return this.decorated.deleteTheme();
+    }
+
     async setColorPalette(colorPaletteId: string): Promise<void> {
         return this.decorated.setColorPalette(colorPaletteId);
+    }
+
+    async deleteColorPalette(): Promise<void> {
+        return this.decorated.deleteColorPalette();
     }
 }

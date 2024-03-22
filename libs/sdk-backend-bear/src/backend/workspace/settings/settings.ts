@@ -1,4 +1,4 @@
-// (C) 2019-2022 GoodData Corporation
+// (C) 2019-2024 GoodData Corporation
 import {
     IWorkspaceSettings,
     IWorkspaceSettingsService,
@@ -97,7 +97,15 @@ export class BearWorkspaceSettings implements IWorkspaceSettingsService {
         throw new NotSupported("Backend does not support workspace theme setup");
     }
 
+    public deleteTheme(): Promise<void> {
+        throw new NotSupported("Backend does not support workspace theme setup");
+    }
+
     public setColorPalette(_colorPaletteId: string): Promise<void> {
+        throw new NotSupported("Backend does not support workspace color palette setup");
+    }
+
+    public async deleteColorPalette() {
         throw new NotSupported("Backend does not support workspace color palette setup");
     }
 }

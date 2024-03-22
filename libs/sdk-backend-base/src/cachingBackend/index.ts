@@ -416,8 +416,16 @@ class WithWorkspaceSettingsCaching extends DecoratedWorkspaceSettingsService {
         return super.setColorPalette(colorPaletteId);
     }
 
+    public deleteColorPalette(): Promise<void> {
+        return super.deleteColorPalette();
+    }
+
     public async setTheme(themeId: string): Promise<void> {
         return super.setTheme(themeId);
+    }
+
+    public deleteTheme(): Promise<void> {
+        return super.deleteTheme();
     }
 
     private getOrCreateWorkspaceEntry = (workspace: string): WorkspaceSettingsCacheEntry => {

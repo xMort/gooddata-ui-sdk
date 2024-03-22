@@ -1,6 +1,6 @@
-// (C) 2019-2022 GoodData Corporation
-import { IWorkspaceStylingService } from "@gooddata/sdk-backend-spi";
-import { IColorPaletteItem, ITheme } from "@gooddata/sdk-model";
+// (C) 2019-2024 GoodData Corporation
+import { IWorkspaceStylingService, NotSupported } from "@gooddata/sdk-backend-spi";
+import { IColorPaletteItem, ITheme, ObjRef } from "@gooddata/sdk-model";
 import { isTheme, unwrapMetadataObject } from "@gooddata/api-model-bear";
 import { BearAuthenticatedCallGuard } from "../../../types/auth.js";
 import { isApiResponseError } from "../../../utils/errorHandling.js";
@@ -35,4 +35,23 @@ export class BearWorkspaceStyling implements IWorkspaceStylingService {
               )
             : {};
     };
+
+    getActiveTheme(): Promise<ObjRef | undefined> {
+        throw new NotSupported("Backend does not support workspace theme setup");
+    }
+    setActiveTheme(_themeRef: ObjRef): Promise<void> {
+        throw new NotSupported("Backend does not support workspace theme setup");
+    }
+    clearActiveTheme(): Promise<void> {
+        throw new NotSupported("Backend does not support workspace theme setup");
+    }
+    getActiveColorPalette(): Promise<ObjRef | undefined> {
+        throw new NotSupported("Backend does not support workspace color palette setup");
+    }
+    setActiveColorPalette(_colorPaletteRef: ObjRef): Promise<void> {
+        throw new NotSupported("Backend does not support workspace color palette setup");
+    }
+    clearActiveColorPalette(): Promise<void> {
+        throw new NotSupported("Backend does not support workspace color palette setup");
+    }
 }
