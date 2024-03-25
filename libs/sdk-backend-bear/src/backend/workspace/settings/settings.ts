@@ -108,4 +108,16 @@ export class BearWorkspaceSettings implements IWorkspaceSettingsService {
     public async deleteColorPalette() {
         throw new NotSupported("Backend does not support workspace color palette setup");
     }
+
+    public async setTimezone(_timezone: string): Promise<void> {
+        throw new NotSupported("Backend does not support workspace locale setup");
+    }
+
+    public async setDateFormat(_dateFormat: string): Promise<void> {
+        throw new NotSupported("Backend does not support workspace locale setup");
+    }
+
+    public async setWeekStart(_weekStart: string): Promise<void> {
+        throw new NotSupported("Backend does not support workspace locale setup");
+    }
 }

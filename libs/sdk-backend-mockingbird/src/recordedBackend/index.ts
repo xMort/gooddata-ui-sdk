@@ -234,6 +234,15 @@ function recordedWorkspace(
                 async deleteTheme(): Promise<void> {
                     return Promise.resolve();
                 },
+                async setTimezone(_timezone: string): Promise<void> {
+                    return Promise.resolve();
+                },
+                async setDateFormat(_dateFormat: string): Promise<void> {
+                    return Promise.resolve();
+                },
+                async setWeekStart(_weekStart: string): Promise<void> {
+                    return Promise.resolve();
+                },
             };
         },
         styling(): IWorkspaceStylingService {

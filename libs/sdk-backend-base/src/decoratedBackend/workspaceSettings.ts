@@ -38,4 +38,16 @@ export abstract class DecoratedWorkspaceSettingsService implements IWorkspaceSet
     async deleteColorPalette(): Promise<void> {
         return this.decorated.deleteColorPalette();
     }
+
+    public async setTimezone(timezone: string): Promise<void> {
+        return this.decorated.setTimezone(timezone);
+    }
+
+    public async setDateFormat(dateFormat: string): Promise<void> {
+        return this.decorated.setDateFormat(dateFormat);
+    }
+
+    public async setWeekStart(weekStart: string): Promise<void> {
+        return this.decorated.setWeekStart(weekStart);
+    }
 }

@@ -64,6 +64,18 @@ export class TigerWorkspaceSettings
         return getSettingsForCurrentUser(this.authCall, this.workspace);
     }
 
+    public async setTimezone(timezone: string): Promise<void> {
+        return this.setSetting("TIMEZONE", { value: timezone });
+    }
+
+    public async setDateFormat(dateFormat: string): Promise<void> {
+        return this.setSetting("FORMAT_LOCALE", { value: dateFormat });
+    }
+
+    public async setWeekStart(weekStart: string): Promise<void> {
+        return this.setSetting("WEEK_START", { value: weekStart });
+    }
+
     protected async getSettingByType(type: TigerSettingsType) {
         return this.authCall((client) =>
             client.entities.getAllEntitiesWorkspaceSettings({
