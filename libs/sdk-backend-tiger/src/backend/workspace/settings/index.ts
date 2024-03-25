@@ -23,19 +23,34 @@ export class TigerWorkspaceSettings
 
     public getSettings(): Promise<IWorkspaceSettings> {
         return this.authCall(async (client) => {
-            const {
-                data: { meta: config },
-            } = (
-                await client.entities.getEntityWorkspaces({
+            const [workspaceEntity, settingsEntities] = await Promise.all([
+                client.entities.getEntityWorkspaces({
                     id: this.workspace,
                     ...GET_OPTIMIZED_WORKSPACE_PARAMS,
-                })
-            ).data;
+                }),
+                client.entities.getAllEntitiesWorkspaceSettings({
+                    workspaceId: this.workspace,
+                }),
+            ]);
+
+            const {
+                data: { meta: config },
+            } = workspaceEntity.data;
+
+            const workspaceSettings = settingsEntities.data.data.reduce((result: ISettings, setting) => {
+                return {
+                    ...result,
+                    [mapTypeToKey(setting.attributes?.type, setting.id)]: unwrapSettingContent(
+                        setting.attributes?.content,
+                    ),
+                };
+            }, {});
 
             return {
                 workspace: this.workspace,
                 ...DefaultUiSettings,
                 ...config?.config,
+                ...workspaceSettings,
             };
         });
     }
