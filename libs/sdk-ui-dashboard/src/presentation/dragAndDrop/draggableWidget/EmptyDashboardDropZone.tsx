@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import cx from "classnames";
 import { Typography } from "@gooddata/sdk-ui-kit";
-import { Col } from "react-grid-system";
+// import { Col } from "react-grid-system";
 
 import { useDashboardDrop } from "../useDashboardDrop.js";
 import {
@@ -96,21 +96,37 @@ export const EmptyDashboardDropZone: React.FC = () => {
         );
 
     return (
-        <Col
-            xl={gridWidth}
-            lg={gridWidth}
-            md={gridWidth}
-            sm={gridWidth}
-            xs={gridWidth}
+        <div
             style={{
                 minHeight: gridHeight ? getDashboardLayoutItemHeightForGrid(gridHeight) : undefined,
             }}
-            className={cx("drag-info-placeholder", "dash-item", {
-                [`type-${widgetCategory}`]: !!widgetCategory,
-                "type-none": !widgetCategory,
-                "s-last-drop-position": canDrop,
-            })}
+            className={cx(
+                "drag-info-placeholder",
+                "dash-item",
+                "gd-grid-layout__item",
+                `gd-grid-layout__item--span-${gridWidth}`,
+                {
+                    [`type-${widgetCategory}`]: !!widgetCategory,
+                    "type-none": !widgetCategory,
+                    "s-last-drop-position": canDrop,
+                },
+            )}
         >
+            {/*<Col*/}
+            {/*    xl={gridWidth}*/}
+            {/*    lg={gridWidth}*/}
+            {/*    md={gridWidth}*/}
+            {/*    sm={gridWidth}*/}
+            {/*    xs={gridWidth}*/}
+            {/*    style={{*/}
+            {/*        minHeight: gridHeight ? getDashboardLayoutItemHeightForGrid(gridHeight) : undefined,*/}
+            {/*    }}*/}
+            {/*    className={cx("drag-info-placeholder", "dash-item", {*/}
+            {/*        [`type-${widgetCategory}`]: !!widgetCategory,*/}
+            {/*        "type-none": !widgetCategory,*/}
+            {/*        "s-last-drop-position": canDrop,*/}
+            {/*    })}*/}
+            {/*>*/}
             <div
                 className={cx("drag-info-placeholder-inner", { "can-drop": canDrop, "is-over": isOver })}
                 ref={dropRef}
@@ -127,6 +143,7 @@ export const EmptyDashboardDropZone: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </Col>
+            {/*</Col>*/}
+        </div>
     );
 };
