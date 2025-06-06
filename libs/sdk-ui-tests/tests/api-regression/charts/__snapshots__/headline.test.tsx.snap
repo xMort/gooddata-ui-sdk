@@ -179,6 +179,26 @@ exports[`Headline > with drilling on two measures > should create expected execu
       ],
       "localIdentifier": "secondary_measures",
     },
+    {
+      "items": [
+        {
+          "measure": {
+            "definition": {
+              "arithmeticMeasure": {
+                "measureIdentifiers": [
+                  "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+                  "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+                ],
+                "operator": "ratio",
+              },
+              "virtual": true,
+            },
+            "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
+          },
+        },
+      ],
+      "localIdentifier": "comparison_virtual_arithmetic_bucket",
+    },
   ],
   "dimensions": [
     {
@@ -213,6 +233,21 @@ exports[`Headline > with drilling on two measures > should create expected execu
           },
         },
         "localIdentifier": "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+      },
+    },
+    {
+      "measure": {
+        "definition": {
+          "arithmeticMeasure": {
+            "measureIdentifiers": [
+              "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+              "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+            ],
+            "operator": "ratio",
+          },
+          "virtual": true,
+        },
+        "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
       },
     },
   ],
@@ -275,6 +310,26 @@ exports[`Headline > with drilling on two measures with underlining disabled > sh
       ],
       "localIdentifier": "secondary_measures",
     },
+    {
+      "items": [
+        {
+          "measure": {
+            "definition": {
+              "arithmeticMeasure": {
+                "measureIdentifiers": [
+                  "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+                  "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+                ],
+                "operator": "ratio",
+              },
+              "virtual": true,
+            },
+            "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
+          },
+        },
+      ],
+      "localIdentifier": "comparison_virtual_arithmetic_bucket",
+    },
   ],
   "dimensions": [
     {
@@ -309,6 +364,21 @@ exports[`Headline > with drilling on two measures with underlining disabled > sh
           },
         },
         "localIdentifier": "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+      },
+    },
+    {
+      "measure": {
+        "definition": {
+          "arithmeticMeasure": {
+            "measureIdentifiers": [
+              "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+              "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+            ],
+            "operator": "ratio",
+          },
+          "virtual": true,
+        },
+        "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
       },
     },
   ],
@@ -1643,6 +1713,26 @@ exports[`Headline > with two measures > should create expected execution definit
       ],
       "localIdentifier": "secondary_measures",
     },
+    {
+      "items": [
+        {
+          "measure": {
+            "definition": {
+              "arithmeticMeasure": {
+                "measureIdentifiers": [
+                  "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+                  "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+                ],
+                "operator": "ratio",
+              },
+              "virtual": true,
+            },
+            "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
+          },
+        },
+      ],
+      "localIdentifier": "comparison_virtual_arithmetic_bucket",
+    },
   ],
   "dimensions": [
     {
@@ -1677,6 +1767,21 @@ exports[`Headline > with two measures > should create expected execution definit
           },
         },
         "localIdentifier": "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+      },
+    },
+    {
+      "measure": {
+        "definition": {
+          "arithmeticMeasure": {
+            "measureIdentifiers": [
+              "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+              "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+            ],
+            "operator": "ratio",
+          },
+          "virtual": true,
+        },
+        "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
       },
     },
   ],
@@ -1737,6 +1842,26 @@ exports[`Headline > with two measures one PoP > should create expected execution
       ],
       "localIdentifier": "secondary_measures",
     },
+    {
+      "items": [
+        {
+          "measure": {
+            "definition": {
+              "arithmeticMeasure": {
+                "measureIdentifiers": [
+                  "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+                  "m_e40a8329_m_e519fa2a_86c3_4e32_8313_0c03062348j3_dt_closedate_timestamp.year",
+                ],
+                "operator": "change",
+              },
+              "virtual": true,
+            },
+            "localIdentifier": "m_6479d0de54ed7db2cebc1d99cf2efa73",
+          },
+        },
+      ],
+      "localIdentifier": "comparison_virtual_arithmetic_bucket",
+    },
   ],
   "dimensions": [
     {
@@ -1773,6 +1898,21 @@ exports[`Headline > with two measures one PoP > should create expected execution
           },
         },
         "localIdentifier": "m_e40a8329_m_e519fa2a_86c3_4e32_8313_0c03062348j3_dt_closedate_timestamp.year",
+      },
+    },
+    {
+      "measure": {
+        "definition": {
+          "arithmeticMeasure": {
+            "measureIdentifiers": [
+              "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+              "m_e40a8329_m_e519fa2a_86c3_4e32_8313_0c03062348j3_dt_closedate_timestamp.year",
+            ],
+            "operator": "change",
+          },
+          "virtual": true,
+        },
+        "localIdentifier": "m_6479d0de54ed7db2cebc1d99cf2efa73",
       },
     },
   ],
@@ -1831,6 +1971,26 @@ exports[`Headline > with two measures with german separators > should create exp
       ],
       "localIdentifier": "secondary_measures",
     },
+    {
+      "items": [
+        {
+          "measure": {
+            "definition": {
+              "arithmeticMeasure": {
+                "measureIdentifiers": [
+                  "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+                  "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+                ],
+                "operator": "ratio",
+              },
+              "virtual": true,
+            },
+            "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
+          },
+        },
+      ],
+      "localIdentifier": "comparison_virtual_arithmetic_bucket",
+    },
   ],
   "dimensions": [
     {
@@ -1865,6 +2025,21 @@ exports[`Headline > with two measures with german separators > should create exp
           },
         },
         "localIdentifier": "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+      },
+    },
+    {
+      "measure": {
+        "definition": {
+          "arithmeticMeasure": {
+            "measureIdentifiers": [
+              "m_e519fa2a_86c3_4e32_8313_0c03062348j3",
+              "m_87a053b0_3947_49f3_b0c5_de53fd01f050",
+            ],
+            "operator": "ratio",
+          },
+          "virtual": true,
+        },
+        "localIdentifier": "m_8a3164755a3677c1c8c4c3a9fb44ea3a",
       },
     },
   ],

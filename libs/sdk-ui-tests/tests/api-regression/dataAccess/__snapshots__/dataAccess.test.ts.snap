@@ -3375,12 +3375,13 @@ exports[`DataAccess > should correctly identify series and slices for: Headline 
 exports[`DataAccess > should correctly identify series and slices for: Headline - font 1`] = `
 {
   "seriesDigest": {
-    "allSeries": 2,
+    "allSeries": 3,
     "attributes": 0,
-    "measures": 2,
+    "measures": 3,
     "seriesNames": [
       " > Won",
       " > Amount",
+      " > m_8a3164755a3677c1c8c4c3a9fb44ea3a",
     ],
   },
   "slicesDigest": {
@@ -3514,12 +3515,13 @@ exports[`DataAccess > should correctly identify series and slices for: Headline 
 exports[`DataAccess > should correctly identify series and slices for: Headline - themed 1`] = `
 {
   "seriesDigest": {
-    "allSeries": 2,
+    "allSeries": 3,
     "attributes": 0,
-    "measures": 2,
+    "measures": 3,
     "seriesNames": [
       " > Won",
       " > Amount",
+      " > m_8a3164755a3677c1c8c4c3a9fb44ea3a",
     ],
   },
   "slicesDigest": {
@@ -3534,12 +3536,13 @@ exports[`DataAccess > should correctly identify series and slices for: Headline 
 exports[`DataAccess > should correctly identify series and slices for: Headline - two measures 1`] = `
 {
   "seriesDigest": {
-    "allSeries": 2,
+    "allSeries": 3,
     "attributes": 0,
-    "measures": 2,
+    "measures": 3,
     "seriesNames": [
       " > Won",
       " > Amount",
+      " > m_8a3164755a3677c1c8c4c3a9fb44ea3a",
     ],
   },
   "slicesDigest": {
@@ -3554,12 +3557,13 @@ exports[`DataAccess > should correctly identify series and slices for: Headline 
 exports[`DataAccess > should correctly identify series and slices for: Headline - two measures one PoP 1`] = `
 {
   "seriesDigest": {
-    "allSeries": 2,
+    "allSeries": 3,
     "attributes": 0,
-    "measures": 2,
+    "measures": 3,
     "seriesNames": [
       " > Won",
       " > Won Last Year",
+      " > m_fb5b6f1921f682f64c312ace756a8691",
     ],
   },
   "slicesDigest": {
@@ -3595,12 +3599,13 @@ exports[`DataAccess > should correctly identify series and slices for: Headline 
 exports[`DataAccess > should correctly identify series and slices for: Headline - two measures with german separators 1`] = `
 {
   "seriesDigest": {
-    "allSeries": 2,
+    "allSeries": 3,
     "attributes": 0,
-    "measures": 2,
+    "measures": 3,
     "seriesNames": [
       " > Won",
       " > Amount",
+      " > m_8a3164755a3677c1c8c4c3a9fb44ea3a",
     ],
   },
   "slicesDigest": {

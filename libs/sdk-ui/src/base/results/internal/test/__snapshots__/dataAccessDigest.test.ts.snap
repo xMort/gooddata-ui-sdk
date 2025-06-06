@@ -1118,7 +1118,7 @@ exports[`createDataAccessDigest > should find slices and series for: Headline - 
 
 exports[`createDataAccessDigest > should find slices and series for: Headline - font 1`] = `
 {
-  "seriesCount": 2,
+  "seriesCount": 3,
   "seriesIdx": 0,
   "slicesCount": 0,
   "slicesIdx": undefined,
@@ -1181,7 +1181,7 @@ exports[`createDataAccessDigest > should find slices and series for: Headline - 
 
 exports[`createDataAccessDigest > should find slices and series for: Headline - themed 1`] = `
 {
-  "seriesCount": 2,
+  "seriesCount": 3,
   "seriesIdx": 0,
   "slicesCount": 0,
   "slicesIdx": undefined,
@@ -1190,7 +1190,7 @@ exports[`createDataAccessDigest > should find slices and series for: Headline - 
 
 exports[`createDataAccessDigest > should find slices and series for: Headline - two measures 1`] = `
 {
-  "seriesCount": 2,
+  "seriesCount": 3,
   "seriesIdx": 0,
   "slicesCount": 0,
   "slicesIdx": undefined,
@@ -1199,7 +1199,7 @@ exports[`createDataAccessDigest > should find slices and series for: Headline - 
 
 exports[`createDataAccessDigest > should find slices and series for: Headline - two measures one PoP 1`] = `
 {
-  "seriesCount": 2,
+  "seriesCount": 3,
   "seriesIdx": 0,
   "slicesCount": 0,
   "slicesIdx": undefined,
@@ -1217,7 +1217,7 @@ exports[`createDataAccessDigest > should find slices and series for: Headline - 
 
 exports[`createDataAccessDigest > should find slices and series for: Headline - two measures with german separators 1`] = `
 {
-  "seriesCount": 2,
+  "seriesCount": 3,
   "seriesIdx": 0,
   "slicesCount": 0,
   "slicesIdx": undefined,

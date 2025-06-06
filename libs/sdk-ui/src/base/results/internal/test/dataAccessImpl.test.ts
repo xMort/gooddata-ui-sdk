@@ -68,7 +68,7 @@ describe("DataAccessMethods", () => {
             const dataAccess = newDataAccessMethods(DataWithTwoSeriesAndNoSlices);
             const series = dataAccess.series().toArray();
 
-            expect(series.length).toEqual(2);
+            expect(series.length).toEqual(3);
 
             for (const s of series) {
                 const rawData = s.rawData();
