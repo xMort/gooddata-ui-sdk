@@ -1,4 +1,4 @@
-// (C) 2024 GoodData Corporation
+// (C) 2024-2025 GoodData Corporation
 
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -46,6 +46,7 @@ export function useNewSectionDashboardLayoutPlaceholderDropHandler(sectionIndex:
                         ref: idRef(id),
                         uri: `/${id}`,
                         configuration: {
+                            direction: "column",
                             sections: {
                                 enableHeader: false,
                             },

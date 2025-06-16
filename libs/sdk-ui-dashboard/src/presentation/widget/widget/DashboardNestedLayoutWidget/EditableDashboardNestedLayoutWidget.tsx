@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import cx from "classnames";
 import { ConfirmDialog, Icon, OverlayController, OverlayControllerProvider } from "@gooddata/sdk-ui-kit";
+import { IDashboardLayoutContainerDirection } from "@gooddata/sdk-model";
 
 import { DashboardItem, DashboardItemBase } from "../../../presentationComponents/index.js";
 import {
@@ -12,14 +13,15 @@ import {
     useDashboardSelector,
     useWidgetSelection,
     toggleLayoutSectionHeaders,
+    toggleLayoutDirection,
 } from "../../../../model/index.js";
-
 import { DASHBOARD_OVERLAYS_FILTER_Z_INDEX } from "../../../constants/index.js";
 import { DashboardLayout } from "../../dashboardLayout/DashboardLayout.js";
-import { Toolbar } from "./Toolbar.js";
 import { IDashboardLayoutProps } from "../../dashboardLayout/types.js";
 import { useScreenSize } from "../../../dashboard/components/DashboardScreenSizeContext.js";
 import { useIsDraggingWidget } from "../../../dragAndDrop/index.js";
+
+import { Toolbar } from "./Toolbar.js";
 
 const overlayController = OverlayController.getInstance(DASHBOARD_OVERLAYS_FILTER_Z_INDEX);
 
@@ -83,6 +85,11 @@ export const EditableDashboardNestedLayoutWidget: React.FC<IDashboardLayoutProps
                                                     areSectionHeadersEnabled,
                                                 ),
                                             );
+                                        }}
+                                        onWidgetDirectionChanged={(
+                                            direction: IDashboardLayoutContainerDirection,
+                                        ) => {
+                                            dispatch(toggleLayoutDirection(parentLayoutPath, direction));
                                         }}
                                         onClose={closeConfigPanel}
                                     />
