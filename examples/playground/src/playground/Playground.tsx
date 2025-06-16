@@ -5,6 +5,7 @@ import { Dashboard } from "@gooddata/sdk-ui-dashboard";
 import { InsightView } from "@gooddata/sdk-ui-ext";
 
 const dashboard = import.meta.env.VITE_DASHBOARD;
+const dashboardInitialRenderMode = import.meta.env.VITE_DASHBOARD_INITIAL_RENDER_MODE;
 const insight = import.meta.env.VITE_INSIGHT;
 
 export const Playground: React.FC = () => {
@@ -16,7 +17,7 @@ export const Playground: React.FC = () => {
             <Dashboard
                 dashboard={dashboard}
                 config={{
-                    initialRenderMode: "view",
+                    initialRenderMode: dashboardInitialRenderMode ?? "view",
                 }}
             />
         );
