@@ -7,7 +7,7 @@ import { IDashboardLayout, IDashboardLayoutContainerDirection } from "@gooddata/
 import cx from "classnames";
 
 import { useDashboardUserInteraction, ExtendedDashboardWidget } from "../../../../model/index.js";
-import { useLayoutConfiguration } from "../../common/useLayoutConfiguration.js";
+import { getLayoutConfiguration } from "../../common/layoutConfiguration.js";
 
 const TOOLBAR_ALIGN_POINTS: IAlignPoint[] = [
     { align: "tr tl", offset: { x: 0, y: 11 } },
@@ -34,7 +34,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     onClose,
 }) => {
     const userInteraction = useDashboardUserInteraction();
-    const { sections, direction } = useLayoutConfiguration(layout);
+    const { sections, direction } = getLayoutConfiguration(layout);
     const areSectionHeadersEnabled = sections.areHeadersEnabled;
     const hasSections = layout.sections.length > 0;
     const DirectionIcon = direction === "row" ? Icon.ArrowRight : Icon.ArrowDown;

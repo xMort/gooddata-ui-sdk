@@ -2,7 +2,9 @@
 
 import { IDashboardLayout } from "@gooddata/sdk-model";
 
-export const useLayoutConfiguration = (layout: IDashboardLayout<unknown>) => {
+import { ExtendedDashboardWidget } from "../../../model/index.js";
+
+export const getLayoutConfiguration = (layout: IDashboardLayout<ExtendedDashboardWidget | unknown>) => {
     // backward compatibility, assume the container direction is set to "row" when not set
     const direction = layout.configuration?.direction ?? "row";
 

@@ -1,8 +1,7 @@
-// (C) 2022-2024 GoodData Corporation
-import { useCallback } from "react";
+// (C) 2022-2025 GoodData Corporation
+import { useCallback, useMemo } from "react";
 import { IInsight, insightRef, insightTitle } from "@gooddata/sdk-model";
 
-import { getSizeInfo } from "../../../../_staging/layout/sizing.js";
 import { newLoadingPlaceholderWidget } from "../../../../widgets/index.js";
 import {
     selectSettings,
@@ -19,10 +18,13 @@ import {
 } from "../../../../model/index.js";
 import { ILayoutSectionPath } from "../../../../types.js";
 import { asLayoutItemPath, serializeLayoutSectionPath } from "../../../../_staging/layout/coordinates.js";
+import { useGetWidgetDefaultSize } from "./useGetWidgetDefaultSize.js";
 
 export function useNewSectionInsightListItemDropHandler(sectionIndex: ILayoutSectionPath) {
     const dispatch = useDashboardDispatch();
     const settings = useDashboardSelector(selectSettings);
+    const layoutPath = useMemo(() => asLayoutItemPath(sectionIndex, 0), [sectionIndex]);
+    const getWidgetDefaultSize = useGetWidgetDefaultSize(layoutPath);
 
     const { run: preselectDateDataset } = useDashboardCommandProcessing({
         commandCreator: enableInsightWidgetDateFilter,
@@ -53,9 +55,7 @@ export function useNewSectionInsightListItemDropHandler(sectionIndex: ILayoutSec
     return useCallback(
         (insight: IInsight) => {
             const correlationId = `insert-insight-list-item-${serializeLayoutSectionPath(sectionIndex)}`;
-            const itemIndex = 0;
-            const layoutPath = asLayoutItemPath(sectionIndex, itemIndex);
-            const sizeInfo = getSizeInfo(settings, "insight", insight);
+            const sizeInfo = getWidgetDefaultSize(settings, "insight", insight);
 
             dispatchAndWaitFor(
                 dispatch,
@@ -103,6 +103,6 @@ export function useNewSectionInsightListItemDropHandler(sectionIndex: ILayoutSec
                 );
             });
         },
-        [dispatch, replaceSectionItemLoader, sectionIndex, settings],
+        [dispatch, replaceSectionItemLoader, sectionIndex, settings, layoutPath, getWidgetDefaultSize],
     );
 }
