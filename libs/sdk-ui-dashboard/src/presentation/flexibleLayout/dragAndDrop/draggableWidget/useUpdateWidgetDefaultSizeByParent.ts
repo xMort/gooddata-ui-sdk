@@ -1,14 +1,14 @@
 // (C) 2025 GoodData Corporation
 
 import { useCallback } from "react";
-import { IVisualizationSizeInfo } from "@gooddata/sdk-ui-ext";
-import { isDashboardLayout, ISettings, AnalyticalWidgetType } from "@gooddata/sdk-model";
+import { IVisualizationSizeInfo, isVisualizationDefaultSizeInfo } from "@gooddata/sdk-ui-ext";
+import { isDashboardLayout } from "@gooddata/sdk-model";
 
-import { useDashboardSelector, selectLayout, ExtendedDashboardWidget } from "../../../../model/index.js";
+import { useDashboardSelector, selectLayout } from "../../../../model/index.js";
 import { hasParent, findItem, getParentPath } from "../../../../_staging/layout/coordinates.js";
 import { getLayoutConfiguration } from "../../../widget/common/layoutConfiguration.js";
 import { ILayoutItemPath } from "../../../../types.js";
-import { MeasurableWidgetContent, getSizeInfo } from "../../../../_staging/layout/sizing.js";
+import { BaseDraggableLayoutItemSize } from "../../../dragAndDrop/index.js";
 
 /**
  * The hook will take an item path, finds its parent layout and uses this information to return a function
@@ -18,17 +18,11 @@ import { MeasurableWidgetContent, getSizeInfo } from "../../../../_staging/layou
  *
  * @param itemLayoutPath - path of the item for which we want to change sizing info
  */
-export const useGetWidgetDefaultSize = (itemLayoutPath: ILayoutItemPath) => {
+export const useUpdateWidgetDefaultSizeByParent = (itemLayoutPath: ILayoutItemPath) => {
     const rootLayout = useDashboardSelector(selectLayout);
 
     return useCallback(
-        (
-            settings: ISettings,
-            widgetType: AnalyticalWidgetType | ExtendedDashboardWidget["type"],
-            widgetContent?: MeasurableWidgetContent,
-        ): IVisualizationSizeInfo => {
-            const size = getSizeInfo(settings, widgetType, widgetContent);
-
+        <T extends BaseDraggableLayoutItemSize | IVisualizationSizeInfo>(size: T): T => {
             if (hasParent(itemLayoutPath)) {
                 const parentPath = getParentPath(itemLayoutPath);
                 const item = findItem(rootLayout, parentPath!);
@@ -38,12 +32,18 @@ export const useGetWidgetDefaultSize = (itemLayoutPath: ILayoutItemPath) => {
                     if (direction === "row") {
                         return size;
                     }
+                    if (isVisualizationDefaultSizeInfo(size)) {
+                        return {
+                            ...size,
+                            width: {
+                                ...size.width,
+                                default: item.size.xl.gridWidth,
+                            },
+                        };
+                    }
                     return {
                         ...size,
-                        width: {
-                            ...size.width,
-                            default: item.size.xl.gridWidth,
-                        },
+                        gridWidth: item.size.xl.gridWidth,
                     };
                 }
             }

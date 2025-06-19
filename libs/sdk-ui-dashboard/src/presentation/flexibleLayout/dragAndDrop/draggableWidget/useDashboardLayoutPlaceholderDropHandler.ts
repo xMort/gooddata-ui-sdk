@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { idRef } from "@gooddata/sdk-model";
+
 import { ILayoutItemPath } from "../../../../types.js";
 import {
     useDashboardDispatch,
@@ -12,8 +13,11 @@ import {
 } from "../../../../model/index.js";
 import { BaseDraggableLayoutItemSize } from "../../../dragAndDrop/index.js";
 
+import { useUpdateWidgetDefaultSizeByParent } from "./useUpdateWidgetDefaultSizeByParent.js";
+
 export function useDashboardLayoutPlaceholderDropHandler(layoutPath: ILayoutItemPath) {
     const dispatch = useDashboardDispatch();
+    const updateWidgetDefaultSizeByParent = useUpdateWidgetDefaultSizeByParent(layoutPath);
 
     const { run: createDashboardLayout } = useDashboardCommandProcessing({
         commandCreator: addNestedLayoutSectionItem,
@@ -27,7 +31,8 @@ export function useDashboardLayoutPlaceholderDropHandler(layoutPath: ILayoutItem
     });
 
     return useCallback(
-        (itemSize: BaseDraggableLayoutItemSize) => {
+        (defaultItemSize: BaseDraggableLayoutItemSize) => {
+            const itemSize = updateWidgetDefaultSizeByParent(defaultItemSize);
             const id = uuidv4();
             createDashboardLayout(layoutPath, {
                 type: "IDashboardLayoutItem",
@@ -52,6 +57,6 @@ export function useDashboardLayoutPlaceholderDropHandler(layoutPath: ILayoutItem
                 },
             });
         },
-        [createDashboardLayout, layoutPath],
+        [createDashboardLayout, layoutPath, updateWidgetDefaultSizeByParent],
     );
 }

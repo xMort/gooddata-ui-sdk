@@ -1,6 +1,7 @@
 // (C) 2022-2025 GoodData Corporation
 import { IInsight, insightRef, insightTitle } from "@gooddata/sdk-model";
 import { useCallback } from "react";
+
 import { ILayoutItemPath } from "../../../../types.js";
 import {
     useDashboardDispatch,
@@ -17,13 +18,14 @@ import {
 } from "../../../../model/index.js";
 import { serializeLayoutItemPath } from "../../../../_staging/layout/coordinates.js";
 import { newLoadingPlaceholderWidget } from "../../../../widgets/index.js";
+import { getSizeInfo } from "../../../../_staging/layout/sizing.js";
 
-import { useGetWidgetDefaultSize } from "./useGetWidgetDefaultSize.js";
+import { useUpdateWidgetDefaultSizeByParent } from "./useUpdateWidgetDefaultSizeByParent.js";
 
 export function useInsightListItemDropHandler(layoutPath: ILayoutItemPath) {
     const dispatch = useDashboardDispatch();
     const settings = useDashboardSelector(selectSettings);
-    const getWidgetDefaultSize = useGetWidgetDefaultSize(layoutPath);
+    const updateWidgetDefaultSizeByParent = useUpdateWidgetDefaultSizeByParent(layoutPath);
 
     const { run: preselectDateDataset } = useDashboardCommandProcessing({
         commandCreator: enableInsightWidgetDateFilter,
@@ -54,7 +56,8 @@ export function useInsightListItemDropHandler(layoutPath: ILayoutItemPath) {
     return useCallback(
         (insight: IInsight) => {
             const correlationId = `insert-insight-list-item-${serializeLayoutItemPath(layoutPath)}`;
-            const sizeInfo = getWidgetDefaultSize(settings, "insight", insight);
+            const defaultItemSize = getSizeInfo(settings, "insight", insight);
+            const itemSize = updateWidgetDefaultSizeByParent(defaultItemSize);
 
             dispatchAndWaitFor(
                 dispatch,
@@ -64,8 +67,8 @@ export function useInsightListItemDropHandler(layoutPath: ILayoutItemPath) {
                         type: "IDashboardLayoutItem",
                         size: {
                             xl: {
-                                gridHeight: sizeInfo.height.default,
-                                gridWidth: sizeInfo.width.default!,
+                                gridHeight: itemSize.height.default,
+                                gridWidth: itemSize.width.default!,
                             },
                         },
                         widget: newLoadingPlaceholderWidget(),
@@ -88,8 +91,8 @@ export function useInsightListItemDropHandler(layoutPath: ILayoutItemPath) {
                         },
                         size: {
                             xl: {
-                                gridHeight: sizeInfo.height.default,
-                                gridWidth: sizeInfo.width.default!,
+                                gridHeight: itemSize.height.default,
+                                gridWidth: itemSize.width.default!,
                             },
                         },
                     },
@@ -99,6 +102,6 @@ export function useInsightListItemDropHandler(layoutPath: ILayoutItemPath) {
                 );
             });
         },
-        [replaceSectionItemLoader, dispatch, layoutPath, settings, getWidgetDefaultSize],
+        [replaceSectionItemLoader, dispatch, layoutPath, settings, updateWidgetDefaultSizeByParent],
     );
 }
