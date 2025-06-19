@@ -10,7 +10,6 @@ import { WidgetDropZone } from "./WidgetDropZone.js";
 import { useDashboardDrop } from "../../../dragAndDrop/useDashboardDrop.js";
 import { useInsightListItemDropHandler } from "./useInsightListItemDropHandler.js";
 import { useInsightPlaceholderDropHandler } from "./useInsightPlaceholderDropHandler.js";
-import { useKpiPlaceholderDropHandler } from "./useKpiPlaceholderDropHandler.js";
 import { useMoveWidgetDropHandler } from "./useMoveWidgetHandler.js";
 import { BaseDraggableLayoutItem } from "../../../dragAndDrop/types.js";
 import { useRichTextPlaceholderDropHandler } from "./useRichTextPlaceholderDropHandler.js";
@@ -34,7 +33,6 @@ export const WidgetDropZoneColumn = (props: WidgetDropZoneColumnProps) => {
 
     const handleInsightListItemDrop = useInsightListItemDropHandler(layoutPath);
     const handleInsightPlaceholderDrop = useInsightPlaceholderDropHandler(layoutPath);
-    const handleKpiPlaceholderDrop = useKpiPlaceholderDropHandler(layoutPath);
     const handleRichTextPlaceholderDrop = useRichTextPlaceholderDropHandler(layoutPath);
     const handleVisualizationSwitcherPlaceholderDrop =
         useVisualizationSwitcherPlaceholderDropHandler(layoutPath);
@@ -62,7 +60,6 @@ export const WidgetDropZoneColumn = (props: WidgetDropZoneColumnProps) => {
             drop: (item) => {
                 draggableWidgetDropHandler(item, {
                     handleInsightListItemDrop,
-                    handleKpiPlaceholderDrop,
                     handleInsightPlaceholderDrop,
                     handleRichTextPlaceholderDrop,
                     handleVisualizationSwitcherPlaceholderDrop,
@@ -75,7 +72,6 @@ export const WidgetDropZoneColumn = (props: WidgetDropZoneColumnProps) => {
             dispatch,
             handleInsightListItemDrop,
             handleInsightPlaceholderDrop,
-            handleKpiPlaceholderDrop,
             handleVisualizationSwitcherPlaceholderDrop,
             handleRichTextPlaceholderDrop,
             handleWidgetDrop,
