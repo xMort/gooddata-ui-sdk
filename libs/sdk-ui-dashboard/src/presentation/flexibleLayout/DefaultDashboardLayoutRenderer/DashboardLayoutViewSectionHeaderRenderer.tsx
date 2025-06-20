@@ -5,7 +5,7 @@ import { Typography } from "@gooddata/sdk-ui-kit";
 import { OnError, OnLoadingChanged } from "@gooddata/sdk-ui";
 
 import { IDashboardLayoutSectionFacade } from "../../../_staging/dashboard/flexibleLayout/index.js";
-import { getLayoutConfiguration } from "../../widget/common/layoutConfiguration.js";
+import { getLayoutConfigurationForSection } from "../../widget/common/layoutConfiguration.js";
 import { useDashboardComponentsContext } from "../../dashboardContexts/index.js";
 
 import { DashboardLayoutSectionHeaderDescription } from "./DashboardLayoutSectionHeaderDescription.js";
@@ -30,7 +30,7 @@ export const DashboardLayoutViewSectionHeader: React.FC<IDashboardLayoutSectionH
     onLoadingChanged,
     onError,
 }) => {
-    const { sections } = getLayoutConfiguration(section.layout().raw());
+    const { sections } = getLayoutConfigurationForSection(section);
     const { LoadingComponent } = useDashboardComponentsContext();
     const isExport = useDashboardSelector(selectIsExport);
     const isSnapshotAccessibilityEnabled = useDashboardSelector(selectEnableSnapshotExportAccessibility);

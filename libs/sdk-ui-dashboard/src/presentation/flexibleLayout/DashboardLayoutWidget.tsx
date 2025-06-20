@@ -65,6 +65,7 @@ import { shouldShowRowEndDropZone } from "./dragAndDrop/draggableWidget/RowEndHo
 import { HoverDetector } from "./dragAndDrop/Resize/HoverDetector.js";
 import { useWidthValidation } from "./DefaultDashboardLayoutRenderer/useItemWidthValidation.js";
 import { useWidgetExportData } from "../export/index.js";
+import { getLayoutConfigurationForItem } from "../widget/common/layoutConfiguration.js";
 
 /**
  * Tests in KD require widget index for css selectors.
@@ -112,7 +113,6 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
     const isExport = useDashboardSelector(selectIsExport);
     const isSnapshotAccessibilityEnabled = useDashboardSelector(selectEnableSnapshotExportAccessibility);
     const enableWidgetCustomHeight = useDashboardSelector(selectEnableWidgetCustomHeight);
-
     const handleDragEnd = useWidgetDragEndHandler();
 
     // TODO: we should probably do something more meaningful when item has no widget; should that even
@@ -125,6 +125,7 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
     const isRichTextWidgetInEditState = isSelected && isRichText;
     const isNestedLayout = isExtendedDashboardLayoutWidget(widget);
     const exportData = useWidgetExportData(widget);
+    const { direction } = getLayoutConfigurationForItem(item);
 
     const [{ isDragging }, dragRef] = useDashboardDrag(
         {
@@ -229,7 +230,12 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
                 ])}
             >
                 {canShowHotspot && !isAnyPlaceholderWidget(widget) && !isCustomWidget(widget) ? (
-                    <Hotspot dropZoneType="prev" layoutPath={item.index()} classNames={hotspotClassNames} />
+                    <Hotspot
+                        dropZoneType="prev"
+                        direction={direction}
+                        layoutPath={item.index()}
+                        classNames={hotspotClassNames}
+                    />
                 ) : null}
                 <DashboardItemPathAndSizeProvider itemPath={item.index()} itemSize={item.size()}>
                     <HoverDetector widgetRef={widget.ref}>
@@ -265,6 +271,7 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
                             <>
                                 <Hotspot
                                     dropZoneType="next"
+                                    direction={direction}
                                     layoutPath={item.index()}
                                     classNames={hotspotClassNames}
                                     hideBorder={

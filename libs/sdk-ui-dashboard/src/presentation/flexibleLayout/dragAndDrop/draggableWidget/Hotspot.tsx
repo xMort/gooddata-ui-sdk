@@ -26,12 +26,14 @@ import {
 } from "../../../../_staging/layout/coordinates.js";
 import { draggableWidgetDropHandler } from "../../../dragAndDrop/draggableWidget/draggableWidgetDropHandler.js";
 import { useWidgetDragHoverHandlers } from "./useWidgetDragHoverHandlers.js";
+import { IDashboardLayoutContainerDirection } from "@gooddata/sdk-model";
 
 interface IHotspotProps {
     layoutPath: ILayoutItemPath;
+    dropZoneType: "prev" | "next";
+    direction: IDashboardLayoutContainerDirection;
     isEndingHotspot?: boolean;
     classNames?: string;
-    dropZoneType: "prev" | "next";
     hideBorder?: boolean;
 }
 
