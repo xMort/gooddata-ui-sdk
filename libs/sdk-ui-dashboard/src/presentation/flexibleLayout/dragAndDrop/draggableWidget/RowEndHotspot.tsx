@@ -12,7 +12,7 @@ import { WidgetDropZoneColumn } from "./WidgetDropZoneColumn.js";
 import { useScreenSize } from "../../../dashboard/components/DashboardScreenSizeContext.js";
 import { GridLayoutElement } from "../../DefaultDashboardLayoutRenderer/GridLayoutElement.js";
 import { getRemainingWidthInRow } from "../../rowEndHotspotHelper.js";
-import { getLayoutConfigurationForItem } from "../../../widget/common/layoutConfiguration.js";
+import { getLayoutConfiguration } from "../../../widget/common/layoutConfiguration.js";
 
 export type RowEndHotspotProps<TWidget = IDashboardWidget> = {
     item: IDashboardLayoutItemFacade<TWidget>;
@@ -27,7 +27,7 @@ export const RowEndHotspot = (props: RowEndHotspotProps<unknown>) => {
     const layoutPath = item.index();
     const isLastInRow = item.isLastInRow(screen);
     const showEndingHotspot = (item.isLastInSection() || isLastInRow) && isInEditMode;
-    const { direction } = getLayoutConfigurationForItem(item);
+    const { direction } = getLayoutConfiguration(item);
 
     const remainingRowGridWidth = useMemo(
         () => getRemainingWidthInRow(item, screen, rowIndex),

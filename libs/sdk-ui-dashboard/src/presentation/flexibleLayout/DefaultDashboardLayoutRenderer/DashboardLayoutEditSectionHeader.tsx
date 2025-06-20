@@ -7,7 +7,7 @@ import { IDashboardLayoutSectionFacade } from "../../../_staging/dashboard/flexi
 import { getRefsForSection } from "../refs.js";
 import { useDashboardSelector, selectIsSectionInsertedByPlugin } from "../../../model/index.js";
 import { SectionHotspot } from "../dragAndDrop/draggableWidget/SectionHotspot.js";
-import { getLayoutConfigurationForSection } from "../../widget/common/layoutConfiguration.js";
+import { getLayoutConfiguration } from "../../widget/common/layoutConfiguration.js";
 
 import { SectionHeaderEditable } from "./EditableHeader/SectionHeaderEditable.js";
 
@@ -25,7 +25,7 @@ export const DashboardLayoutEditSectionHeader: React.FC<IDashboardLayoutSectionH
     parentLayoutItemSize,
     isEmptySection,
 }) => {
-    const { sections } = getLayoutConfigurationForSection(section);
+    const { sections } = getLayoutConfiguration(section);
     const refs = getRefsForSection(section);
     const isEditingDisabled = useDashboardSelector(selectIsSectionInsertedByPlugin(refs));
     if (isEmptySection) {

@@ -65,7 +65,7 @@ import { shouldShowRowEndDropZone } from "./dragAndDrop/draggableWidget/RowEndHo
 import { HoverDetector } from "./dragAndDrop/Resize/HoverDetector.js";
 import { useWidthValidation } from "./DefaultDashboardLayoutRenderer/useItemWidthValidation.js";
 import { useWidgetExportData } from "../export/index.js";
-import { getLayoutConfigurationForItem } from "../widget/common/layoutConfiguration.js";
+import { getLayoutConfiguration } from "../widget/common/layoutConfiguration.js";
 
 /**
  * Tests in KD require widget index for css selectors.
@@ -125,7 +125,7 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
     const isRichTextWidgetInEditState = isSelected && isRichText;
     const isNestedLayout = isExtendedDashboardLayoutWidget(widget);
     const exportData = useWidgetExportData(widget);
-    const { direction } = getLayoutConfigurationForItem(item);
+    const { direction } = getLayoutConfiguration(item);
 
     const [{ isDragging }, dragRef] = useDashboardDrag(
         {
