@@ -18,6 +18,7 @@ import { useDashboardDrag, useResizeHandlers, useResizeWidthItemStatus } from ".
 import { WidthResizer } from "./WidthResizer.js";
 import { useScreenSize } from "../../../dashboard/components/DashboardScreenSizeContext.js";
 import { useHoveredWidget } from "../../../dragAndDrop/HoveredWidgetContext.js";
+import { getLayoutConfiguration } from "../../../widget/common/layoutConfiguration.js";
 
 export type WidthResizerHotspotProps = {
     item: IDashboardLayoutItemFacade<unknown>;
@@ -39,6 +40,7 @@ export function WidthResizerHotspot({
     const settings = useDashboardSelector(selectSettings);
     const { resizeStart, resizeEnd, getScrollCorrection } = useResizeHandlers();
     const screen = useScreenSize();
+    const { direction } = getLayoutConfiguration(item.section().layout().raw());
 
     const widget = useMemo(() => item.widget() as IWidget, [item]);
     const widgetIdentifier = widget.identifier;
@@ -100,7 +102,8 @@ export function WidthResizerHotspot({
 
     const isThisResizing = isWidthResizing && isActive;
 
-    const showHotspot = !isDragging || isWidthResizing || isResizerVisible;
+    const isColumnContainer = direction === "column";
+    const showHotspot = (!isDragging || isWidthResizing || isResizerVisible) && !isColumnContainer;
     const showResizer = isResizerVisible || isThisResizing;
     const status = isDragging ? "muted" : isHovered(widget.ref) ? "default" : "active";
 
