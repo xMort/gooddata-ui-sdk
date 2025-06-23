@@ -25,7 +25,7 @@ export const DashboardLayoutEditSectionHeader: React.FC<IDashboardLayoutSectionH
     parentLayoutItemSize,
     isEmptySection,
 }) => {
-    const { sections } = getLayoutConfiguration(section);
+    const { sections } = getLayoutConfiguration(section.layout().raw());
     const refs = getRefsForSection(section);
     const isEditingDisabled = useDashboardSelector(selectIsSectionInsertedByPlugin(refs));
     if (isEmptySection) {

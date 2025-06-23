@@ -30,7 +30,7 @@ export const DashboardLayoutViewSectionHeader: React.FC<IDashboardLayoutSectionH
     onLoadingChanged,
     onError,
 }) => {
-    const { sections } = getLayoutConfiguration(section);
+    const { sections } = getLayoutConfiguration(section.layout().raw());
     const { LoadingComponent } = useDashboardComponentsContext();
     const isExport = useDashboardSelector(selectIsExport);
     const isSnapshotAccessibilityEnabled = useDashboardSelector(selectEnableSnapshotExportAccessibility);

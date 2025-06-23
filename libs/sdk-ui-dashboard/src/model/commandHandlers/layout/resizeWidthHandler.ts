@@ -1,6 +1,11 @@
 // (C) 2021-2025 GoodData Corporation
 
-import { IWidget } from "@gooddata/sdk-model";
+import {
+    IWidget,
+    IDashboardLayoutContainerDirection,
+    IDashboardLayout,
+    isDashboardLayout,
+} from "@gooddata/sdk-model";
 import { SagaIterator } from "redux-saga";
 import { put, select, call } from "redux-saga/effects";
 import { ResizeWidth } from "../../commands/layout.js";
@@ -24,9 +29,13 @@ import {
     getSectionIndex,
     getItemIndex,
     getParentPath,
+    hasParent,
 } from "../../../_staging/layout/coordinates.js";
 import { resizeParentContainers } from "./containerHeightSanitization.js";
 import { selectSettings } from "../../store/config/configSelectors.js";
+import { getLayoutConfiguration } from "../../../presentation/widget/common/layoutConfiguration.js";
+import { ILayoutItemPath } from "../../../types.js";
+import { ExtendedDashboardWidget } from "../../types/layoutTypes.js";
 
 function validateLayoutIndexes(
     ctx: DashboardContext,
@@ -115,6 +124,21 @@ export function* resizeWidthHandler(
     );
 }
 
+const getContainerDirection = (
+    layout: IDashboardLayout<ExtendedDashboardWidget>,
+    itemPath: ILayoutItemPath | undefined,
+): IDashboardLayoutContainerDirection => {
+    if (itemPath === undefined || !hasParent(itemPath)) {
+        return "row"; // compatibility with the old layout or when there is no parent
+    }
+    const parent = findItem(layout, itemPath.slice(0, -1));
+    if (!isDashboardLayout(parent.widget)) {
+        return "row"; // the wrong path was provided, it should always return parent here
+    }
+    const { direction } = getLayoutConfiguration(parent.widget);
+    return direction;
+};
+
 function validateWidth(
     ctx: DashboardContext,
     layout: ReturnType<typeof selectLayout>,
@@ -132,7 +156,8 @@ function validateWidth(
             ? (layout.sections[sectionIndex].items[itemIndex].widget as IWidget)
             : (findItem(layout, itemPath).widget as IWidget);
 
-    const minLimit = getMinWidth(widget, insightsMap, screen, settings);
+    const direction = getContainerDirection(layout, itemPath);
+    const minLimit = getMinWidth(widget, insightsMap, screen, settings, direction);
     const parent =
         itemPath !== undefined && itemPath.slice(0, -1).length > 0 && findItem(layout, itemPath.slice(0, -1));
 

@@ -27,7 +27,7 @@ export const RowEndHotspot = (props: RowEndHotspotProps<unknown>) => {
     const layoutPath = item.index();
     const isLastInRow = item.isLastInRow(screen);
     const showEndingHotspot = (item.isLastInSection() || isLastInRow) && isInEditMode;
-    const { direction } = getLayoutConfiguration(item);
+    const { direction } = getLayoutConfiguration(item.section().layout().raw());
 
     const remainingRowGridWidth = useMemo(
         () => getRemainingWidthInRow(item, screen, rowIndex),

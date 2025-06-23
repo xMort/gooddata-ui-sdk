@@ -1,5 +1,5 @@
 // (C) 2019-2025 GoodData Corporation
-import { IWidget } from "@gooddata/sdk-model";
+import { IWidget, isDashboardLayout, IDashboardLayoutContainerDirection } from "@gooddata/sdk-model";
 import React, { useEffect, useMemo, useState } from "react";
 import cx from "classnames";
 
@@ -15,10 +15,11 @@ import { getMinWidth } from "../../../../_staging/layout/sizing.js";
 import { getDashboardLayoutItemMaxGridWidth } from "../../DefaultDashboardLayoutRenderer/index.js";
 import { getSizeAndXCoords } from "../DragLayerPreview/WidthResizerDragPreview.js";
 import { useDashboardDrag, useResizeHandlers, useResizeWidthItemStatus } from "../../../dragAndDrop/index.js";
-import { WidthResizer } from "./WidthResizer.js";
 import { useScreenSize } from "../../../dashboard/components/DashboardScreenSizeContext.js";
 import { useHoveredWidget } from "../../../dragAndDrop/HoveredWidgetContext.js";
 import { getLayoutConfiguration } from "../../../widget/common/layoutConfiguration.js";
+
+import { WidthResizer } from "./WidthResizer.js";
 
 export type WidthResizerHotspotProps = {
     item: IDashboardLayoutItemFacade<unknown>;
@@ -26,6 +27,18 @@ export type WidthResizerHotspotProps = {
     getGridColumnWidth: () => number;
     getLayoutDimensions: () => DOMRect;
     rowIndex: number;
+};
+
+// if the item is a layout, its direction is returned; otherwise the function returns the parent layout's direction
+const getItemLayoutDirection = (
+    itemFacade: IDashboardLayoutItemFacade<unknown>,
+    parentLayoutDirection: IDashboardLayoutContainerDirection,
+): IDashboardLayoutContainerDirection => {
+    const item = itemFacade.raw();
+    if (isDashboardLayout(item.widget)) {
+        return getLayoutConfiguration(item.widget).direction;
+    }
+    return parentLayoutDirection;
 };
 
 export function WidthResizerHotspot({
@@ -40,7 +53,11 @@ export function WidthResizerHotspot({
     const settings = useDashboardSelector(selectSettings);
     const { resizeStart, resizeEnd, getScrollCorrection } = useResizeHandlers();
     const screen = useScreenSize();
-    const { direction } = getLayoutConfiguration(item);
+
+    // we are always interested about parent's direction, otherwise we would hide width resizer on the container itself
+    const parentLayoutDirection = getLayoutConfiguration(item.section().layout().raw()).direction;
+    // we need either the parent's direction or item's direction in the case when the item is layout to determine min width
+    const itemDirection = getItemLayoutDirection(item, parentLayoutDirection);
 
     const widget = useMemo(() => item.widget() as IWidget, [item]);
     const widgetIdentifier = widget.identifier;
@@ -53,7 +70,7 @@ export function WidthResizerHotspot({
     const layoutPath = item.index();
 
     const currentWidth = item.sizeForScreen(screen)!.gridWidth;
-    const minLimit = getMinWidth(widget, insightsMap, screen, settings);
+    const minLimit = getMinWidth(widget, insightsMap, screen, settings, itemDirection);
     const maxLimit = getDashboardLayoutItemMaxGridWidth(item, screen);
 
     const [{ isDragging }, dragRef] = useDashboardDrag(
@@ -102,7 +119,7 @@ export function WidthResizerHotspot({
 
     const isThisResizing = isWidthResizing && isActive;
 
-    const isColumnContainer = direction === "column";
+    const isColumnContainer = parentLayoutDirection === "column";
     const showHotspot = (!isDragging || isWidthResizing || isResizerVisible) && !isColumnContainer;
     const showResizer = isResizerVisible || isThisResizing;
     const status = isDragging ? "muted" : isHovered(widget.ref) ? "default" : "active";

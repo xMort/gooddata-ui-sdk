@@ -125,7 +125,7 @@ export const DashboardLayoutWidget: IDashboardLayoutWidgetRenderer<
     const isRichTextWidgetInEditState = isSelected && isRichText;
     const isNestedLayout = isExtendedDashboardLayoutWidget(widget);
     const exportData = useWidgetExportData(widget);
-    const { direction } = getLayoutConfiguration(item);
+    const { direction } = getLayoutConfiguration(item.section().layout().raw()); // TODO do I need parent layout or could this item be layout as well?
 
     const [{ isDragging }, dragRef] = useDashboardDrag(
         {

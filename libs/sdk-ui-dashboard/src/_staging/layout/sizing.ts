@@ -1,5 +1,7 @@
 // (C) 2019-2025 GoodData Corporation
 
+import isNil from "lodash/isNil.js";
+import { invariant } from "ts-invariant";
 import {
     AnalyticalWidgetType,
     IDashboardLayoutSize,
@@ -22,6 +24,7 @@ import {
     IDashboardLayoutItem,
     IDashboardLayoutSizeByScreenSize,
     IDashboardLayout,
+    IDashboardLayoutContainerDirection,
 } from "@gooddata/sdk-model";
 import {
     fluidLayoutDescriptor,
@@ -41,18 +44,17 @@ import {
 } from "@gooddata/sdk-ui-ext";
 
 import { ObjRefMap } from "../metadata/objRefMap.js";
+import { ExtendedDashboardWidget, isCustomWidget } from "../../model/types/layoutTypes.js";
+import { DASHBOARD_LAYOUT_GRID_COLUMNS_COUNT } from "../dashboard/flexibleLayout/config.js";
+import { ILayoutItemPath } from "../../types.js";
+import { getLayoutConfiguration } from "../../presentation/widget/common/layoutConfiguration.js";
+
+import { findItem, hasParent } from "./coordinates.js";
 import {
     KPI_WITHOUT_COMPARISON_SIZE_INFO,
     KPI_WITH_COMPARISON_SIZE_INFO,
     GRID_ROW_HEIGHT_IN_PX,
 } from "./constants.js";
-import { ExtendedDashboardWidget, isCustomWidget } from "../../model/types/layoutTypes.js";
-
-import { DASHBOARD_LAYOUT_GRID_COLUMNS_COUNT } from "../dashboard/flexibleLayout/config.js";
-import { invariant } from "ts-invariant";
-import { findItem, hasParent } from "./coordinates.js";
-import { ILayoutItemPath } from "../../types.js";
-import isNil from "lodash/isNil.js";
 
 /**
  * @internal
@@ -323,6 +325,82 @@ function getVisSwitcherDimension(
     });
 }
 
+function getMaximumItemDefaultWidth(
+    item: IDashboardLayoutItem<ExtendedDashboardWidget>,
+    parentContainerDirection: IDashboardLayoutContainerDirection,
+    screen: ScreenSize,
+    settings: ISettings,
+    insightMap: ObjRefMap<IInsight>,
+): number {
+    const widget = item.widget!;
+    if (isDashboardLayout(widget)) {
+        return parentContainerDirection === "column"
+            ? getMaximumDefaultWidthOfRecursiveLayoutItems(
+                  widget,
+                  getLayoutConfiguration(widget).direction,
+                  screen,
+                  insightMap,
+                  settings,
+              )
+            : determineWidthForScreen(screen, item.size);
+    } else {
+        return getDashboardLayoutWidgetMinGridWidth(
+            settings,
+            getExtendedWidgetType(widget),
+            getWidgetContent(widget, insightMap),
+        );
+    }
+}
+
+/**
+ * The function finds the maximum width of items in the container, recursively. It does not take their
+ * current width but their default minimum width. If the container has the direction set to columns,
+ * the function goes into the container and processes its children. If the container has the direction set
+ * to rows, the function does not go into the container and instead takes its width.
+ * @param container - container we are interested in
+ * @param direction - direction of the provided container
+ * @param screen - the current screen size
+ * @param insightMap - map of insights, used to get their type and subsequently its dimensions
+ * @param settings - settings to determine the current feature flags
+ */
+function getMaximumDefaultWidthOfRecursiveLayoutItems(
+    container: IDashboardLayout<ExtendedDashboardWidget>,
+    direction: IDashboardLayoutContainerDirection,
+    screen: ScreenSize,
+    insightMap: ObjRefMap<IInsight>,
+    settings: ISettings,
+): number {
+    return container.sections
+        .flatMap((section) => section.items)
+        .filter((item) => item.widget)
+        .map((item) => getMaximumItemDefaultWidth(item, direction, screen, settings, insightMap))
+        .reduce((maxWidth, itemWidth) => Math.max(maxWidth, itemWidth), 0);
+}
+
+/**
+ * The function finds the current widths maximum of the top level items of the container.
+ * The function does not go inside the containers it finds. It takes their reported width.
+ *
+ * @param container - container we are interested in.
+ * @param screen - the current screen size
+ * @param emptyLayoutMinWidth - minimum size of the empty layout (used as a fallback)
+ * @returns the width of the container that takes the most space.
+ */
+function getMaximumCurrentWidthOfTopLevelLayoutItems(
+    container: IDashboardLayout<ExtendedDashboardWidget>,
+    screen: ScreenSize,
+    emptyLayoutMinWidth: number,
+): number {
+    return container.sections.reduce((acc, section) => {
+        return Math.max(
+            acc,
+            section.items.reduce((acc, item) => {
+                return Math.max(acc, determineWidthForScreen(screen, item.size) ?? emptyLayoutMinWidth);
+            }, emptyLayoutMinWidth),
+        );
+    }, emptyLayoutMinWidth);
+}
+
 /**
  * @internal
  */
@@ -331,6 +409,7 @@ export function getMinWidth(
     insightMap: ObjRefMap<IInsight>,
     screen: ScreenSize,
     settings: ISettings,
+    direction: IDashboardLayoutContainerDirection,
 ): number {
     if (isCustomWidget(widget)) {
         return MIN_VISUALIZATION_WIDTH;
@@ -341,17 +420,10 @@ export function getMinWidth(
         );
     } else if (isDashboardLayout(widget)) {
         const emptyLayoutMinWidth = getDashboardLayoutWidgetMinGridWidth(settings, widget.type);
-
-        return widget.sections.reduce((acc, section) => {
-            return Math.max(
-                acc,
-                section.items.reduce((acc, item) => {
-                    return Math.max(acc, determineWidthForScreen(screen, item.size) ?? emptyLayoutMinWidth);
-                }, emptyLayoutMinWidth),
-            );
-        }, emptyLayoutMinWidth);
+        return direction === "column"
+            ? getMaximumDefaultWidthOfRecursiveLayoutItems(widget, direction, screen, insightMap, settings)
+            : getMaximumCurrentWidthOfTopLevelLayoutItems(widget, screen, emptyLayoutMinWidth);
     }
-
     return getDashboardLayoutWidgetMinGridWidth(
         settings,
         getExtendedWidgetType(widget),
@@ -372,17 +444,17 @@ export function normalizeItemSizeToParent(
 } {
     if (itemPath && hasParent(itemPath) && itemToCheck.widget) {
         const widget = itemToCheck.widget;
-
-        const minWidth = getMinWidth(widget, insightsMap, screen, settings);
         const parent = findItem(layout, itemPath.slice(0, -1));
+        const { direction } = getLayoutConfiguration(
+            parent.widget as IDashboardLayout<ExtendedDashboardWidget>,
+        );
+        const minWidth = getMinWidth(widget, insightsMap, screen, settings, direction);
         const newSize = normalizeSizeToParent(itemToCheck.size, minWidth, parent, screen);
         const sizeChanged = newSize.xl.gridWidth !== itemToCheck.size.xl.gridWidth;
-
         const item = {
             ...itemToCheck,
             size: newSize,
         };
-
         return {
             item,
             sizeChanged,
@@ -401,7 +473,7 @@ function normalizeSizeToParent(
     const parentWidth = determineWidthForScreen(screen, parent.size);
     return {
         xl: {
-            gridHeight: itemSize.xl.gridHeight, // keep height untouched as container can be extended freely in this direction
+            gridHeight: itemSize.xl.gridHeight, // keep height untouched as the container can be extended freely in this direction
             gridWidth: width <= parentWidth ? width : Math.max(parentWidth, itemMinWidth),
         },
     };
