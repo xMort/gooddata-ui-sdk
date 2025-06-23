@@ -449,7 +449,7 @@ export function normalizeItemSizeToParent(
             parent.widget as IDashboardLayout<ExtendedDashboardWidget>,
         );
         const minWidth = getMinWidth(widget, insightsMap, screen, settings, direction);
-        const newSize = normalizeSizeToParent(itemToCheck.size, minWidth, parent, screen);
+        const newSize = normalizeSizeToParent(itemToCheck.size, minWidth, parent, direction, screen);
         const sizeChanged = newSize.xl.gridWidth !== itemToCheck.size.xl.gridWidth;
         const item = {
             ...itemToCheck,
@@ -467,6 +467,7 @@ function normalizeSizeToParent(
     itemSize: IDashboardLayoutSizeByScreenSize,
     itemMinWidth: number,
     parent: IDashboardLayoutItem<ExtendedDashboardWidget>,
+    parentDirection: IDashboardLayoutContainerDirection,
     screen: ScreenSize = "xl",
 ): IDashboardLayoutSizeByScreenSize {
     const width = determineWidthForScreen(screen, itemSize);
@@ -474,7 +475,12 @@ function normalizeSizeToParent(
     return {
         xl: {
             gridHeight: itemSize.xl.gridHeight, // keep height untouched as the container can be extended freely in this direction
-            gridWidth: width <= parentWidth ? width : Math.max(parentWidth, itemMinWidth),
+            gridWidth:
+                width <= parentWidth
+                    ? parentDirection === "column"
+                        ? parentWidth
+                        : width // auto size to parent when moving to a column container
+                    : Math.max(parentWidth, itemMinWidth),
         },
     };
 }
