@@ -29,7 +29,6 @@ import {
     getSectionIndex,
     getItemIndex,
     getParentPath,
-    hasParent,
 } from "../../../_staging/layout/coordinates.js";
 import { resizeParentContainers } from "./containerHeightSanitization.js";
 import { selectSettings } from "../../store/config/configSelectors.js";
@@ -128,12 +127,12 @@ const getContainerDirection = (
     layout: IDashboardLayout<ExtendedDashboardWidget>,
     itemPath: ILayoutItemPath | undefined,
 ): IDashboardLayoutContainerDirection => {
-    if (itemPath === undefined || !hasParent(itemPath)) {
+    if (itemPath === undefined) {
         return "row"; // compatibility with the old layout or when there is no parent
     }
-    const parent = findItem(layout, itemPath.slice(0, -1));
+    const parent = findItem(layout, itemPath);
     if (!isDashboardLayout(parent.widget)) {
-        return "row"; // the wrong path was provided, it should always return parent here
+        return "row"; // return row in the case when we are not resizing a layout
     }
     const { direction } = getLayoutConfiguration(parent.widget);
     return direction;
